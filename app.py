@@ -13,7 +13,7 @@ app = Flask(__name__)
 load_dotenv() 
 
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
-# Define holidays on the simplified calendar
+# Define holidays on the simplified calendar test
 holidays = {
     "HEAD OF THE YEAR/ Day of rememberance": {
         "month": 1, "days": [1],
