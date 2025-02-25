@@ -242,7 +242,7 @@ def calculate_year_interval_for_requested_year(requested_year):
 """ message = Mail(
     from_email='info@sputniktech.co',
     to_emails='mupanesuret48@gmail.com',
-    subject='Sending with Twilio SendGrid is Fun',
+    subject='Sending with Twilio SendGrid is Fun', 
     html_content='<strong>and easy to do anywhere, even with Python</strong>')
 try:
     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
@@ -255,6 +255,7 @@ except Exception as e:
 
 @app.route('/set-date')
 def set_date():
+    
     local_date = request.args.get('date')
     # You can store the local date in the session to use it in other routes
     session['local_date'] = local_date
@@ -276,10 +277,16 @@ def home():
     today = datetime.now().date()
     start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
     start_date = start_dates[start_year]
-    
-    
-    # Retrieve the local date from the session
-    local_date = session.get('local_date', datetime.now().strftime('%Y-%m-%d'))
+
+    # Retrieve the local date from the session or default to today
+    local_date = session.get('local_date', today.strftime('%Y-%m-%d'))
+    # Convert stored local_date to a date object for comparison
+    stored_date = datetime.strptime(local_date, '%Y-%m-%d').date()
+
+    # If the stored date is before today, update it
+    if stored_date < today:
+        local_date = today.strftime('%Y-%m-%d')
+        session['local_date'] = local_date
 
     months_data, month_intervals = {}, {}
     for month_number in range(1, 13):
@@ -289,8 +296,44 @@ def home():
         month_intervals[month_number] = month_interval  # Store month intervals
         start_date += timedelta(days=days_in_month)
 
-    # Pass the calculated year_interval to your template
-    return render_template('calendar.html', months_data=months_data, month_intervals=month_intervals, year_interval=year_interval, local_date=local_date,today=today.strftime('%Y-%m-%d'))
+    return render_template('calendar.html', 
+                           months_data=months_data, 
+                           month_intervals=month_intervals, 
+                           year_interval=year_interval, 
+                           local_date=local_date,
+                           today=today.strftime('%Y-%m-%d'))
+
+
+# @app.route('/')
+# def home():
+#     # Extract the requested year from the query parameter, if present
+#     requested_year = request.args.get('year', default=None, type=int)
+
+#     # Determine the current or requested year interval
+#     if requested_year:
+#         year_interval = calculate_year_interval_for_requested_year(requested_year)
+#     else:
+#         year_interval = calculate_current_zadok_year_interval()
+
+#     start_year, end_year = map(int, year_interval.split('-'))
+#     today = datetime.now().date()
+#     start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
+#     start_date = start_dates[start_year]
+    
+    
+#     # Retrieve the local date from the session
+#     local_date = session.get('local_date', datetime.now().strftime('%Y-%m-%d'))
+
+#     months_data, month_intervals = {}, {}
+#     for month_number in range(1, 13):
+#         days_in_month = 31 if month_number in [3, 6, 9, 12] else 30
+#         month_data, month_interval = generate_month_data_with_intervals(start_date, days_in_month, month_number)
+#         months_data[month_number] = month_data
+#         month_intervals[month_number] = month_interval  # Store month intervals
+#         start_date += timedelta(days=days_in_month)
+
+#     # Pass the calculated year_interval to your template
+#     return render_template('calendar.html', months_data=months_data, month_intervals=month_intervals, year_interval=year_interval, local_date=local_date,today=today.strftime('%Y-%m-%d'))
 
 def calculate_year_interval_for_requested_year(requested_year):    
     return f"{requested_year}-{requested_year + 1}"
