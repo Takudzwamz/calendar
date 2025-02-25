@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Understanding the Zadok Biblical Calendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+    />
+    <meta
+      name="keywords"
+      content="Zadok Calendar, Biblical Calendar, Hebrew Calendar, Festivals, {{ year_interval }}"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://solarcalendar.site/" />
+    <meta property="og:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
+    <meta
+      property="og:description"
+      content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+    />
+    <meta
+      property="og:image"
+      content="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://solarcalendar.site/" />
+    <meta
+      property="twitter:title"
+      content="Zadok Biblical Calendar - {{ year_interval }}"
+    />
+    <meta
+      property="twitter:description"
+      content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+    />
+    <meta
+      property="twitter:image"
+      content="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png"
+    />
+    <link
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      // Immediately set the theme based on user preference before the page content loads
+      (function () {
+        const theme = localStorage.getItem("theme-preference") || "light"; // Default to light theme
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark-mode"); // Use documentElement for early access to the <html> element
+        }
+      })();
+    </script>
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: #6750a4;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        background: #ff9800;
+      }
+
+      .bg-primary {
+        background-color: #6750a4 !important;
+      }
+      .btn-primary {
+        color: #fff;
+        background-color: #6750a4;
+        border-color: #6750a4;
+        border-radius: 15px;
+      }
+      .btn-secondary {
+        color: #fff;
+        background-color: #6750a4;
+        border-color: #6750a4;
+        border-radius: 15px;
+      }
+
+      .verses-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .verse-section {
+        //background: white;
+        border-radius: 8px;
+        border: 1px solid #ff9800;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .verse-reference {
+        font-weight: bold;
+        color: #6750a4;
+      }
+      .verse-text {
+        padding-top: 10px;
+      }
+
+      .fas {
+        color: white;
+      }
+
+      .dark-mode .btn-secondary {
+        background-color: #6c757d; /* Secondary button in dark mode */
+        border-color: #6c757d;
+      }
+
+      .dark-mode {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+
+      .dark-mode body {
+        background-color: #121212; /* Or any color you prefer */
+        color: #e0e0e0; /* Adjust text color as needed */
+      }
+
+      .dark-mode .btn-secondary {
+        background-color: #555; /* Muted button background for less distraction */
+      }
+      .dark-mode .btn-secondary {
+        background-color: #6c757d; /* Adjust buttons as well */
+      }
+
+      .faq-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .faq-section {
+        //background: white;
+        border-radius: 8px;
+        border: 1px solid #ff9800;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .question {
+        font-weight: bold;
+      }
+      .answer {
+        padding-top: 10px;
+      }
+
+      section {
+      }
+
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: whitesmoke;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+      }
+
+      .loading-screen i {
+        font-size: 3rem; /* Adjust the size of the icon */
+        color: #6750a4; /* Adjust the color of the icon */
+      }
+
+      .loading-screen p {
+        margin-top: 20px;
+        font-size: 1.5rem;
+        color: #333; /* Adjust the color of the text */
+      }
+      .dark-mode .loading-screen {
+        background-color: #121212; /* Or any color you prefer */
+        color: whitesmoke; /* Adjust text color as needed */
+      }
+
+      .dark-mode .loading-screen p {
+        color: whitesmoke; /* Adjust text color as needed */
+      }
+
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border-left-color: #6750a4;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .fade-out {
+        animation: fadeOut 0.5s;
+        animation-fill-mode: forwards; /* Keeps the element in the state of the last animation frame */
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loadingScreen" class="loading-screen">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>All praise to</p>
+      <p>𐤉𐤄𐤅𐤄</p>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <!-- Add container-fluid for better alignment -->
+        <a class="navbar-brand" href="/">Zadok Calendar</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mr-auto">
+            <!-- mr-auto will push the toggle to the right -->
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/instructions">Calendar Usage</a>
+            </li>
+            <li class="nav-item">
+              <button id="darkModeToggle" class="btn nav-link">
+                <i id="darkModeIcon" class="fas fa-moon"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <h1 class="mb-4">Understanding the Zadok Biblical Calendar</h1>
+      <section>
+        <p>Click the button below go back to calendar page</p>
+        <a href="/" class="btn btn-primary mr-2 mb-5"
+          >Go back to calendar page</a
+        >
+      </section>
+
+      <section
+        style="
+          margin-bottom: 40px;
+          border-radius: 8px;
+          border: 1px solid #ff9800;
+          padding: 20px;
+          width: 100%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <h2>Introduction</h2>
+        <p>
+          Welcome to the Zadok Biblical Calendar, a distinctive calendar system.I do not claim to be an expert or to have all the answers, but simply
+          sharing my journey as I study the Scriptures and ancient texts. This calendar is uniquely
+          solar-based, diverging from traditional lunar-solar calendars to align
+          more closely with the cycles of the sun. It serves as a bridge
+          connecting biblical events and modern-day observances, offering a
+          fresh lens through which to view the synchronization of time according
+          to the Bible. This guide aims to simplify its principles and highlight
+          its significance, inviting you on a journey through solar-based
+          biblical timekeeping.
+        </p>
+        <p>The Zadok Biblical Calendar uses the Torah, Prophets, & New Testament in collaboration with Enoch, Jubilees, and other
+          documents found in the Dead Sea Scrolls, recorded in great detail by the Sons of Zadok, descendants of Aaron, the High
+          Priest.</p>
+      </section>
+
+      <section
+        style="
+          margin-bottom: 40px;
+          border-radius: 8px;
+          border: 1px solid #ff9800;
+          padding: 20px;
+          width: 100%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <h2>The Concept of the Zadok Biblical Calendar</h2>
+
+        <h4>The Zadok Biblical Calendar</h4>
+        <p>
+          The Zadok Biblical Calendar stands out for its adherence to a precise
+          and methodical structure deeply rooted in scriptural and natural
+          observations. This calendar diverges significantly from the Gregorian
+          system by establishing a year that consistently comprises exactly 364
+          days. This configuration allows for a perfect division into 52 weeks,
+          ensuring that each year begins and concludes on the same weekday, thus
+          eliminating the irregular shifts seen in other calendars.
+        </p>
+
+        <h4>The Commencement of Divine Timekeeping</h4>
+        <p>
+          Central to this calendar is the principle that the year starts on a
+          Wednesday, inspired by the biblical account where the luminaries were
+          created on the fourth day. This alignment is more than symbolic; it
+          serves as a chronological anchor, reflecting the commencement of
+          divine timekeeping.
+        </p>
+
+        <h4>The Role of the Vernal Equinox</h4>
+        <p>
+          The vernal equinox, marking the onset of spring, plays a pivotal role
+          in determining the new year within this system. Historically, the
+          equinox has been a significant marker for the start of the year in
+          biblical times. In the Zadok Biblical calendar, if the vernal equinox
+          does not fall on a Wednesday, adjustments are made to align the year's
+          start to the nearest Wednesday. This adherence ensures that our
+          calendar consistently maintains a 364-day year, divided into 52 equal
+          weeks and months of 30 days, with an exception for the 3rd, 6th, 9th,
+          and 12th months, which contain 31 days. The addition of an intercalary
+          day at the end of these months compensates for the four days preceding
+          the creation of the luminaries, ingeniously integrating biblical
+          cosmology with precise timekeeping.
+        </p>
+
+        <h4>The Harmony and Order of Seasons</h4>
+        <p>
+          This structure not only honors the biblical declaration of a 364-day
+          year but also facilitates a seamless transition between seasons,
+          echoing the harmony and order of the biblical narrative. Through the
+          Zadok Biblical Calendar, I invite you to rediscover the rhythm of
+          time as envisioned in sacred texts, offering a window into the divine
+          framework of days, weeks, and seasons.
+        </p>
+      </section>
+
+      <section
+        style="
+          margin-bottom: 40px;
+          border-radius: 8px;
+          border: 1px solid #ff9800;
+          padding: 20px;
+          width: 100%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <h2>Key Differences from the Gregorian Calendar</h2>
+        <ul>
+          <li>
+            <strong>Solar Basis:</strong> Unlike the Gregorian calendar, which
+            is primarily solar but does not align perfectly with biblical
+            timekeeping, the Zadok Calendar is strictly solar-based, adhering to
+            a 364-day year. This structure ensures a consistent, unchanging
+            count of weeks and days, reflecting the calendar's alignment with
+            natural and astronomical cycles.
+          </li>
+          <li>
+            <strong>Structure of Months and Years:</strong> The Zadok Calendar
+            dismisses the lunar cycle in defining months, opting instead for a
+            straightforward division of the year into 12 months, with the 3rd,
+            6th, 9th, and 12th months having 31 days to accommodate the
+            intercalary days. This approach guarantees each year begins and ends
+            on the same day of the week, with the year consistently starting on
+            a Wednesday, in homage to the creation of the luminaries on the
+            fourth day.
+          </li>
+          <li>
+            <strong>Vernal Equinox Alignment:</strong> The year's commencement
+            is determined by the vernal equinox, signifying the start of spring.
+            If the equinox does not fall on a Wednesday, adjustments are made to
+            begin the year on the nearest Wednesday. This ensures the calendar
+            remains in harmony with the biblical commandment of a 364-day year,
+            facilitating the observance of feasts and holy days at their
+            scripturally intended times.
+          </li>
+          <li>
+            <strong>Feasts and Holy Days:</strong> By adhering to a fixed solar
+            structure, the Zadok Calendar accurately determines the dates for
+            biblical feasts without the variability introduced by lunar
+            observations. This consistent framework allows for the precise
+            observance of these significant days, as originally outlined in
+            scripture, ensuring they fall within their proper seasons each year.
+          </li>
+          <p>
+            This revised calendar system not only honors the integrity of
+            biblical timekeeping but also reconnects its adherents with the
+            celestial order and divine design encapsulated within the pages of
+            sacred texts. Through the Zadok Biblical Calendar, believers are
+            invited to align their spiritual practices with a calendar that
+            mirrors the heavenly blueprint for time.
+          </p>
+        </ul>
+      </section>
+
+      <section
+        style="
+          margin-bottom: 40px;
+          border-radius: 8px;
+          border: 1px solid #ff9800;
+          padding: 20px;
+          width: 100%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <h2>How to Use the Zadok Biblical Calendar</h2>
+        <ol>
+          <li>
+            <strong>Understanding the Calendar Structure:</strong> The Zadok
+            Biblical Calendar is structured around a 364-day year, divided into
+            12 months of 30 days per month with the exception of the 3rd, 6th,
+            9th, and 12th months which have 31 days to incorporate intercalary
+            days. This design ensures each year starts on a Wednesday,
+            reflecting the creation of the luminaries on the fourth day.
+          </li>
+          <li>
+            <strong>Interacting with the Calendar:</strong> Our calendar is
+            designed for ease of use, with each month clearly delineated to show
+            its correspondence with the Gregorian calendar dates. This visual
+            representation aids in understanding how the days on the Zadok
+            Calendar align with the more widely used Gregorian dates,
+            facilitating a smooth transition for planning and observance
+            purposes.
+          </li>
+          <li>
+            <strong>Observing Feasts and Holy Days:</strong> Key biblical feasts
+            and significant days are prominently marked on the calendar. This
+            feature is intended to assist in the advance planning of
+            observances, celebrations, and rest days, ensuring you can honor
+            these times in alignment with scriptural mandates.
+          </li>
+          <li>
+            <strong>Determining the Yearly Cycle:</strong> The start of each new
+            year is carefully calculated to align with the vernal equinox,
+            adhering to the biblical and natural order of timekeeping. This
+            method guarantees the calendar remains synchronized with the
+            scriptural command of a 364-day year, allowing for a consistent and
+            predictable cycle of weeks and months.
+          </li>
+          <li>
+            <strong>Embracing the Calendar in Daily Life:</strong> By
+            integrating the Zadok Biblical Calendar into your daily life, you
+            engage with a timekeeping system that is deeply rooted in biblical
+            principles and celestial patterns. It offers a structured approach
+            to marking time, celebrating feasts, and observing holy days that is
+            both spiritually meaningful and aligned with the natural world.
+          </li>
+          <p>
+            This guide aims to not only familiarize you with the functional
+            aspects of the Zadok Biblical Calendar but also to invite you into a
+            deeper connection with the rhythms of biblical timekeeping. As you
+            align your observances with this calendar, you participate in a
+            tradition that honors the divine design of time.
+          </p>
+        </ol>
+      </section>
+      <!-- 
+      <div class="container">
+        <div class="verses-header">
+          <h2>Biblical Foundations</h2>
+          <p>Scriptural basis for the Zadok Biblical Calendar</p>
+        </div>
+      
+        <div class="verse-section">
+          <p class="verse-reference">Genesis 1:14</p>
+          <p class="verse-text">"And God said, Let there be lights in the firmament of the heaven to divide the day from the night; and let them be for signs, and for seasons, and for days, and years:"</p>
+        </div>
+      
+        <div class="verse-section">
+          <p class="verse-reference">Exodus 12:2</p>
+          <p class="verse-text">"This month shall be unto you the beginning of months: it shall be the first month of the year to you."</p>
+        </div>
+      
+        <div class="verse-section">
+          <p class="verse-reference">Leviticus 23:4</p>
+          <p class="verse-text">"These are the feasts of the LORD, even holy convocations, which ye shall proclaim in their seasons."</p>
+        </div>
+      
+        
+      
+      </div>-->
+
+      <div class="container">
+        <div class="faq-header">
+          <h2>Frequently Asked Questions</h2>
+          <p>Learn more about the Zadok Biblical Calendar</p>
+        </div>
+
+        <div class="faq-section">
+          <p class="question">
+            Q: How do I find the corresponding Gregorian date for a day on the
+            Zadok Biblical Calendar?
+          </p>
+          <p class="answer">
+            A: Each date cell on the Zadok Biblical Calendar already includes
+            the corresponding Gregorian date, making it straightforward to see
+            how dates align between both calendars. This feature simplifies
+            planning and transitioning between the two systems.
+          </p>
+        </div>
+
+        <div class="faq-section">
+          <p class="question">
+            Q: How does the Zadok Calendar align with the Gregorian calendar?
+          </p>
+          <p class="answer">
+            A: The Zadok Calendar is meticulously aligned with the Gregorian
+            calendar, providing a clear and concise visual representation of
+            each day's equivalence. This alignment ensures that you can easily
+            navigate between both calendars without the need for complex
+            conversions.
+          </p>
+        </div>
+
+        <div class="faq-section">
+          <p class="question">
+            Q: Can I use the Zadok Calendar for everyday planning and tracking
+            important events?
+          </p>
+          <p class="answer">
+            A: Absolutely! The Zadok Biblical Calendar is not only a tool for
+            observing biblical feasts and holy days but also a practical
+            calendar for organizing your everyday life. Its direct correlation
+            with the Gregorian dates allows for seamless integration into your
+            daily planning, offering a meaningful way to stay connected with the
+            biblical and natural flow of time.
+          </p>
+        </div>
+
+        <div class="faq-section">
+          <p class="question">
+            Q: How are biblical feasts and holy days determined on the Zadok
+            Calendar?
+          </p>
+          <p class="answer">
+            A: Biblical feasts and significant days are carefully calculated
+            based on scriptural instructions and the natural astronomical cycle.
+            These days are clearly highlighted on the calendar, providing an
+            easy reference for planning your observances in advance and ensuring
+            that you celebrate these important times in their season, as
+            prescribed in the Bible.
+          </p>
+        </div>
+      </div>
+
+      <section
+        style="
+          margin-bottom: 40px;
+          border-radius: 8px;
+          border: 1px solid #ff9800;
+          padding: 20px;
+          width: 100%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <h2>Last words</h2>
+        <p>
+          I hope this guide helps you navigate and appreciate the Zadok Biblical
+          Calendar. Embrace the journey of aligning more closely with the
+          biblical way of timekeeping and the natural world. If you have any
+          questions or need further assistance, please don't hesitate to contact
+          me.
+        </p>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start bg-primary text-light">
+      <div class="container p-4">
+        <!-- Section: Social media -->
+        <section class="mb-4">
+          <!-- Facebook -->
+          <a
+            class="btn btn-outline-light btn-floating m-1"
+            href="https://www.facebook.com/profile.php?id=100010630635297&sfnsn=scwspwa&mibextid=2JQ9oc"
+            role="button"
+          >
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <!-- Twitter -->
+          <a
+            class="btn btn-outline-light btn-floating m-1"
+            href=" https://x.com/TakudzwaM6?t=gGYStfamcOYxovoXQvYzWQ&s=08"
+            role="button"
+          >
+            <i class="fab fa-twitter"></i>
+          </a>
+          <!-- Instagram -->
+          <a
+            class="btn btn-outline-light btn-floating m-1"
+            href="https://www.instagram.com/takum1709?utm_source=qr&igsh=aW5hdjVzdjJnaGoz"
+            role="button"
+          >
+            <i class="fab fa-instagram"></i>
+          </a>
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Text -->
+        <section class="mb-4">
+          <p>
+            Thank you for visiting the Zadok Biblical Calendar. Get in touch
+            with me on my social medias.
+          </p>
+          <p>Created with love by Takudzwa Mupanesure</p>
+        </section>
+        <!-- Section: Text -->
+      </div>
+
+      <!-- Section: Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        © 2024 Zadok Biblical Calendar:
+        <a class="text-light" href="https://solarcalendar.site/"
+          >solarcalendar.site</a
+        >
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const toggleButton = document.getElementById("darkModeToggle");
+        const icon = document.getElementById("darkModeIcon");
+
+        // Toggle theme function
+        function toggleTheme() {
+          const isDarkMode =
+            document.documentElement.classList.toggle("dark-mode");
+          localStorage.setItem(
+            "theme-preference",
+            isDarkMode ? "dark" : "light"
+          );
+          icon.className = isDarkMode ? "fas fa-sun" : "fas fa-moon";
+        }
+
+        // Event listener for the toggle button
+        toggleButton.addEventListener("click", toggleTheme);
+
+        // Set the correct icon on load based on the current theme
+        const currentTheme =
+          localStorage.getItem("theme-preference") || "light";
+        icon.className = currentTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+      });
+    </script>
+    <script>
+      window.addEventListener("load", function () {
+        const loadingScreen = document.getElementById("loadingScreen");
+        if (loadingScreen) {
+          loadingScreen.classList.add("fade-out");
+
+          // Optional: Remove the loading screen from DOM after fade out
+          setTimeout(() => {
+            loadingScreen.remove();
+          }, 500); // Match this timeout with the fade-out animation duration
+        }
+      });
+
+      // Optional: Add CSS for fade-out effect
+    </script>
+  </body>
+</html>

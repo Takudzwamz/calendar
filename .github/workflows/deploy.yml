@@ -1,0 +1,40 @@
+name: Deploy Flask to Azure
+
+on:
+  push:
+    branches:
+      - main # Set a branch name to trigger deployment
+
+jobs:
+  build_and_push_flask:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to Docker Hub
+      run: |
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+    - name: Build and push Flask Docker image
+      run: |
+        docker build --build-arg FLASK_SECRET_KEY=${{ secrets.FLASK_SECRET_KEY }} -t ${{ secrets.DOCKER_USERNAME }}/flask-app:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
+
+  deploy_to_azure:
+    needs: build_and_push_flask
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'zadokcalendar'
+        slot-name: 'production'
+        images: '${{ secrets.DOCKER_USERNAME }}/flask-app:latest'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}

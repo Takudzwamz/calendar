@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Zadok Biblical Calendar - {{ year_interval }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
+  <meta name="keywords" content="Zadok Calendar, Biblical Calendar, Hebrew Calendar, Festivals, {{ year_interval }}" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://solarcalendar.site/" />
+  <meta property="og:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
+  <meta property="og:description"
+    content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
+  <meta property="og:image"
+    content="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://solarcalendar.site/" />
+  <meta property="twitter:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
+  <meta property="twitter:description"
+    content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
+  <meta property="twitter:image"
+    content="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png" />
+  <link rel="icon" type="image/x-icon"
+    href="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png" />
+  <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet" />
+
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <script>
+    // Immediately set the theme based on user preference before the page content loads
+    (function () {
+      const theme = localStorage.getItem("theme-preference") || "light"; // Default to light theme
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark-mode"); // Use documentElement for early access to the <html> element
+      }
+    })();
+  </script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: #6750a4;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+      background: #ff9800;
+    }
+
+    .calendar-card {
+      margin-bottom: 20px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .calendar-header {
+      background-color: #6750a4;
+      color: #ffffff;
+      padding: 10px 0;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+
+    .bg-primary {
+      background-color: #6750a4 !important;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background-color: #6750a4;
+      border-color: #6750a4;
+      border-radius: 15px;
+    }
+
+    .btn-secondary {
+      color: #fff;
+      background-color: #6750a4;
+      border-color: #6750a4;
+      border-radius: 15px;
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+    }
+
+    .table th {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .table td {
+      position: relative;
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .day-cell .day-number {
+      font-weight: bold;
+      background-color: #6750a4;
+      color: #ffffff;
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .fas {
+      color: white;
+    }
+
+    .sabbath .day-number {
+      font-weight: bold;
+      background-color: green;
+      /* Purple background */
+      color: #ffffff;
+      /* White text */
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .today-highlight .day-number {
+      font-weight: bold;
+      background-color: #ff9800;
+      /* Purple background */
+      color: #000;
+      /* White text */
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .today-highlight {
+      background-color: #b19bd8;
+      color: #000;
+    }
+
+    .holiday-bar {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      /* Center the bar relative to its parent */
+      transform: translateX(-50%);
+      /* Offset the bar back by half its width to truly center it */
+      width: 50%;
+      /* Adjust the width as needed */
+      height: 5px;
+      border-radius: 5px;
+      background-color: #ff9800;
+      /* Adjust the color as needed */
+    }
+
+    .sabbath-bar {
+      position: absolute;
+      margin-bottom: 0px;
+      margin-top: 5px;
+      bottom: 3px;
+      left: 50%;
+      /* Center the bar relative to its parent */
+      transform: translateX(-50%);
+      /* Offset the bar back by half its width to truly center it */
+      width: 50%;
+      /* Adjust the width as needed */
+      height: 3px;
+      border-radius: 5px;
+      background-color: green;
+      /* Adjust the color as needed */
+    }
+
+    /* Light Mode Styles (default Bootstrap values, or customize as needed) */
+    .modal-content {
+      background-color: #fff;
+      /* Light background for light mode */
+      color: #000;
+      /* Text color for light mode */
+    }
+
+    .modal-header,
+    .modal-footer {
+      border-color: #dee2e6;
+      /* Light border for modal sections */
+    }
+
+    /* Dark Mode Styles */
+    .dark-mode .modal-content {
+      background-color: #343a40;
+      /* Dark background for dark mode */
+      color: #e0e0e0;
+      /* Text color for dark mode */
+    }
+
+    .dark-mode .modal-header,
+    .dark-mode .modal-footer {
+      border-color: #444;
+      /* Dark border for modal sections in dark mode */
+    }
+
+    .dark-mode .close {
+      color: #e0e0e0;
+      /* Close button color */
+    }
+
+    .dark-mode .btn-secondary {
+      background-color: #6c757d;
+      /* Secondary button in dark mode */
+      border-color: #6c757d;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    .dark-mode .calendar-card {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      border: 1px solid #333;
+    }
+
+    .dark-mode .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #f5f5f5;
+    }
+
+    .dark-mode .table th,
+    .dark-mode .table td {
+      border-color: #444;
+      /* Adjust based on your design */
+    }
+
+    .dark-mode body {
+      background-color: #121212;
+      /* Or any color you prefer */
+      color: #e0e0e0;
+      /* Adjust text color as needed */
+    }
+
+    .dark-mode .calendar-header {
+      background-color: #6750a4;
+      /* Or any color you prefer */
+    }
+
+    .dark-mode .day-cell .day-number {
+      background-color: #6750a4;
+      /* Matching the header */
+    }
+
+    .dark-mode .today-highlight {
+      background-color: #9575cd;
+      /* A softer purple for highlighting */
+    }
+
+    .dark-mode .holiday-bar {
+      background-color: #ff9800;
+      /* Brighter, to stand out in dark mode */
+    }
+
+    .dark-mode .btn-secondary {
+      background-color: #6750a4;
+      /* Adjust buttons as well */
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: whitesmoke;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    .loading-screen i {
+      font-size: 3rem;
+      /* Adjust the size of the icon */
+      color: #6750a4;
+      /* Adjust the color of the icon */
+    }
+
+    .loading-screen p {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #333;
+      /* Adjust the color of the text */
+    }
+
+    .dark-mode .loading-screen {
+      background-color: #121212;
+      /* Or any color you prefer */
+      color: whitesmoke;
+      /* Adjust text color as needed */
+    }
+
+    .dark-mode .loading-screen p {
+      color: whitesmoke;
+      /* Adjust text color as needed */
+    }
+
+    /* Existing styles */
+    .custom-input {
+      border-radius: 30px;
+      background-color: #e0e0e0;
+      width: 50%;
+    }
+
+    .custom-button {
+      background-color: #6750a4;
+      color: white;
+      #margin-top: 3px;
+      border-radius: 30px;
+    }
+
+    /* Hide increment and decrement buttons */
+    .no-spinner::-webkit-outer-spin-button,
+    .no-spinner::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .no-spinner {
+      -moz-appearance: textfield;
+    }
+
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border-left-color: #6750a4;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.5s;
+      animation-fill-mode: forwards;
+      /* Keeps the element in the state of the last animation frame */
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    #scrollBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      z-index: 99;
+      font-size: 18px;
+      border: none;
+      outline: none;
+      background-color: #6f42c1;
+      color: white;
+      cursor: pointer;
+      padding: 15px;
+      border-radius: 10px;
+      display: block;
+      /* Ensure it's not set to none */
+    }
+
+    #scrollBtn:hover {
+      background-color: #555;
+    }
+
+    @media (max-width: 768px) {
+      .calendar-header {
+        font-size: 1.1rem;
+      }
+
+      .table th,
+      .table td {
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+
+      .table th,
+      .table td {
+        padding: 0.5rem;
+        font-size: 0.65rem;
+      }
+
+      .day-cell .day-number {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loadingScreen" class="loading-screen">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>All praise to</p>
+    <p>𐤉𐤄𐤅𐤄</p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container-fluid">
+      <!-- Add container-fluid for better alignment -->
+      <a class="navbar-brand" href="/">Zadok Calendar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <!-- mr-auto will push the toggle to the right -->
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/instructions">Calendar Usage</a>
+          </li>
+          <li class="nav-item">
+            <button id="darkModeToggle" class="btn nav-link">
+              <i id="darkModeIcon" class="fas fa-moon"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <!-- Updated to use year_interval for displaying the current interval -->
+    <h1 class="text-center mb-4">Zadok Calendar - {{ year_interval }}</h1>
+
+    <div class="text-center mb-4">
+      <!-- Year search input and button -->
+      <form action="/" method="get" class="form-inline justify-content-center">
+        <input type="text" name="year" class="form-control mr-2 custom-input" placeholder="Seach by year" required />
+        <button type="submit" class="btn custom-button">Search</button>
+      </form>
+    </div>
+
+    {% set start_year, end_year = year_interval.split('-') %}
+    {% set current_year = today.split('-')[0]|int %}
+    {% if selected_year == current_year %}
+    {% set active_month = local_date.split('-')[1]|int %}
+    {% else %}
+    {% set active_month = 1 %}
+    {% endif %}
+
+    <div id="calendarCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+      <div class="carousel-inner">
+        {% for month, days in months_data.items() %}
+        <div class="carousel-item {% if month|int == active_month %}active{% endif %}">
+          <div class="calendar-card">
+            <!-- Top Year Navigation -->
+            <div class="d-flex justify-content-between align-items-center p-2">
+              <a href="/?year={{ start_year | int - 1 }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Prev yr
+              </a>
+              <a href="/?year={{ end_year | int }}" class="btn btn-primary">
+                Next yr <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+            <!-- Month Header with Month Navigation -->
+            <div class="calendar-header position-relative">
+              <!-- Left Month Arrow -->
+              <span class="position-absolute"
+                style="left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"
+                onclick="$('#calendarCarousel').carousel('prev');">
+                <i class="fas fa-chevron-left"></i>
+              </span>
+              <!-- Month Title in the Center -->
+              <span class="d-block text-center">
+                Month {{ month }} | {{ month_intervals[month] }}
+              </span>
+              <!-- Right Month Arrow -->
+              <span class="position-absolute"
+                style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"
+                onclick="$('#calendarCarousel').carousel('next');">
+                <i class="fas fa-chevron-right"></i>
+              </span>
+            </div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">1|Su</th>
+                  <th scope="col">2|Mo</th>
+                  <th scope="col">3|Tu</th>
+                  <th scope="col">4|We</th>
+                  <th scope="col">5|Th</th>
+                  <th scope="col">6|Fr</th>
+                  <th scope="col">7|Sa</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for week in days|batch(7, '&nbsp;') %}
+                <tr>
+                  {% for day in week %}
+                  <td
+                    class="{% if day.gregorian_date == local_date %}today-highlight{% elif day.is_sabbath %}sabbath{% else %}day-cell{% endif %}{% if day.holiday %} holiday{% endif %}{% if day.simplified_date %} clickable{% endif %}"
+                    {% if day.simplified_date and (day.holiday !="None" or day.is_sabbath) %}
+                    onclick="showInfo('{{ day.holiday }}', '{{ day.description }}', {{ day.is_sabbath|lower }})" {%
+                    endif %}>
+                    {% if day.simplified_date %}
+                    <span class="day-number">{{ day.simplified_date }}</span><br />
+                    {{ day.gregorian_date }}
+                    {% if day.holiday %}
+                    <div class="holiday-bar"></div>
+                    {% endif %}
+                    {% if day.is_sabbath %}
+                    <div class="sabbath-bar"></div>
+                    {% endif %}
+                    {% endif %}
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <!-- Bottom Year Navigation -->
+            <div class="d-flex justify-content-between align-items-center p-2">
+              <a href="/?year={{ start_year | int - 1 }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Prev yr
+              </a>
+              <a href="/?year={{ end_year | int }}" class="btn btn-primary">
+                Next yr <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- JavaScript to auto-scroll carousel to the slide with today's date -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Look for the element with the today-highlight class
+        var todayElem = document.querySelector('.today-highlight');
+        if (todayElem) {
+          var carouselItem = todayElem.closest('.carousel-item');
+          var items = Array.from(document.querySelectorAll('#calendarCarousel .carousel-item'));
+          var index = items.indexOf(carouselItem);
+          if (index >= 0) {
+            $('#calendarCarousel').carousel(index);
+          }
+        }
+      });
+    </script>
+
+
+    <!-- Buy Me a Coffee Section -->
+    <div class="text-center mb-4 py-5">
+      <p class="lead">
+        Are you enjoying the Zadok Biblical Calendar? Consider supporting me!
+      </p>
+      <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+        data-name="bmc-button" data-slug="takudzwamupanesure" data-color="#ff9800" data-emoji="" data-font="Cookie"
+        data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
+        data-coffee-color="#ffffff"></script>
+    </div>
+    <!-- Generate Calendar instructions link -->
+    <div class="text-center mb-4">
+      <p>
+        Click the button below to learn how to use the Zadok Biblical Calendar
+      </p>
+      <a href="/instructions" class="btn btn-primary mr-2">Calendar Usage instructions</a>
+    </div>
+
+  </div>
+  <button id="scrollBtn" title="Go to bottom">
+    <i class="fas fa-arrow-down"></i>
+  </button>
+
+  <!-- Footer -->
+  <footer class="text-center text-lg-start bg-primary text-light">
+    <div class="container p-4">
+      <!-- Section: Social media -->
+      <section class="mb-4">
+        <!-- Facebook -->
+        <a class="btn btn-outline-light btn-floating m-1"
+          href="https://www.facebook.com/profile.php?id=100010630635297&sfnsn=scwspwa&mibextid=2JQ9oc" role="button">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <!-- Twitter -->
+        <a class="btn btn-outline-light btn-floating m-1" href=" https://x.com/TakudzwaM6?t=gGYStfamcOYxovoXQvYzWQ&s=08"
+          role="button">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <!-- Instagram -->
+        <a class="btn btn-outline-light btn-floating m-1"
+          href="https://www.instagram.com/takum1709?utm_source=qr&igsh=aW5hdjVzdjJnaGoz" role="button">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </section>
+      <!-- Section: Social media -->
+
+      <!-- Section: Text -->
+      <section class="mb-4">
+        <p>
+          Thank you for visiting the Zadok Biblical Calendar. Get in touch
+          with me on my social medias.
+        </p>
+        <p>Created with love by Takudzwa Mupanesure</p>
+      </section>
+      <!-- Section: Text -->
+    </div>
+
+    <!-- Section: Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+      © 2024 Zadok Biblical Calendar:
+      <a class="text-light" href="https://solarcalendar.site/">solarcalendar.site</a>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal fade" id="holidayModal" tabindex="-1" role="dialog" aria-labelledby="holidayModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="holidayModalTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="holidayModalBody">
+          <!-- Holiday information will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    function showInfo(holidayName, holidayDescription, isSabbath) {
+      let contentHTML = "";
+
+      if (isSabbath) {
+        contentHTML +=
+          "<h5>Shabbat Shalom/Happy Sabbath</h5><p>A day of rest and spiritual enrichment. Exodus 20:8-11 KJV:  Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: but the seventh day is the sabbath of 𐤉𐤄𐤅𐤄 thy Elohim: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days 𐤉𐤄𐤅𐤄 made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore 𐤉𐤄𐤅𐤄 blessed the sabbath day, and hallowed it.</p>";
+      }
+
+      if (holidayName && holidayName !== "None") {
+        contentHTML +=
+          (contentHTML ? "<hr>" : "") +
+          `<h5>${holidayName}</h5><p>${holidayDescription}</p>`;
+      }
+
+      // Prevent showing the modal if there's no content to display (e.g., empty cells or "None" values)
+      if (!contentHTML) return;
+
+      $("#holidayModalBody").html(contentHTML);
+      $("#holidayModal").modal("show");
+    }
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggleButton = document.getElementById("darkModeToggle");
+      const icon = document.getElementById("darkModeIcon");
+
+      // Toggle theme function
+      function toggleTheme() {
+        const isDarkMode =
+          document.documentElement.classList.toggle("dark-mode");
+        localStorage.setItem(
+          "theme-preference",
+          isDarkMode ? "dark" : "light"
+        );
+        icon.className = isDarkMode ? "fas fa-sun" : "fas fa-moon";
+      }
+
+      // Event listener for the toggle button
+      toggleButton.addEventListener("click", toggleTheme);
+
+      // Set the correct icon on load based on the current theme
+      const currentTheme =
+        localStorage.getItem("theme-preference") || "light";
+      icon.className = currentTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+    });
+  </script>
+  <script>
+    window.addEventListener("load", function () {
+      const loadingScreen = document.getElementById("loadingScreen");
+      if (loadingScreen) {
+        loadingScreen.classList.add("fade-out");
+
+        // Optional: Remove the loading screen from DOM after fade out
+        setTimeout(() => {
+          loadingScreen.remove();
+        }, 500); // Match this timeout with the fade-out animation duration
+      }
+    });
+
+    // Optional: Add CSS for fade-out effect
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Create a new date object for the current time
+      const now = new Date();
+      // Construct the date string manually to ensure it's based on the local time
+      const today =
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(now.getDate()).padStart(2, "0");
+
+      // Example AJAX request using fetch API
+      fetch(`/set-date?date=${today}`)
+        .then((response) => response.json())
+        .then((data) => {
+          // Optional: Update the page based on the response
+          console.log("Server response", data);
+        })
+        .catch((error) => console.error("Error setting date:", error));
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var scrollBtn = document.getElementById("scrollBtn");
+      var lastScrollTop = 0; // Variable to store the last scroll position
+
+      // Function to toggle scroll direction
+      function toggleScrollDirection() {
+        var currentScrollPos =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        if (currentScrollPos > lastScrollTop) {
+          // Scrolling down
+          if (currentScrollPos > 20) {
+            scrollBtn.innerHTML = '<i class="fas fa-arrow-down"></i>';
+            scrollBtn.title = "Go to bottom";
+            scrollBtn.style.display = "block"; // Ensure button is visible when scrolling down
+          }
+        } else {
+          // Scrolling up
+          scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+          scrollBtn.title = "Go to top";
+          scrollBtn.style.display = "block"; // Ensure button is visible when scrolling up
+        }
+
+        // Update the last scroll position to the current scroll position
+        lastScrollTop = currentScrollPos <= 0 ? 0 : currentScrollPos; // For Mobile or negative scrolling
+      }
+
+      // Listen for scroll events to toggle the button state
+      window.onscroll = function () {
+        toggleScrollDirection();
+      };
+
+      // Handle button click
+      scrollBtn.onclick = function () {
+        if (scrollBtn.title === "Go to bottom") {
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+          });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      };
+
+      // Initially set the correct icon and title
+      toggleScrollDirection();
+    });
+  </script>
+</body>
+
+</html>
