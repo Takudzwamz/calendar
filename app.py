@@ -1,6 +1,6 @@
 
 import os
-from flask import Flask, jsonify, render_template, request, session
+from flask import Flask, jsonify, make_response, render_template, request, session
 import ephem
 from datetime import datetime, timedelta, date
 import calendar
@@ -262,6 +262,22 @@ def set_date():
     return jsonify({"message": "Local date received", "date": local_date})
 
 
+@app.route('/sitemap.xml')
+def sitemap():
+    # Get the dynamic year interval (using your existing function)
+    year_interval = calculate_current_zadok_year_interval()  
+    # Alternatively, if you have a requested_year, adjust accordingly.
+    current_date = date.today().isoformat()
+    sitemap_xml = render_template('sitemap_template.xml', year_interval=year_interval, current_date=current_date)
+    response = make_response(sitemap_xml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
+
+@app.route('/robots.txt')
+def robots_txt():
+    return app.send_static_file('robots.txt')
+
+
 @app.route('/')
 def home():
     # Extract the requested year from the query parameter, if present
@@ -303,37 +319,6 @@ def home():
                            local_date=local_date,
                            today=today.strftime('%Y-%m-%d'))
 
-
-# @app.route('/')
-# def home():
-#     # Extract the requested year from the query parameter, if present
-#     requested_year = request.args.get('year', default=None, type=int)
-
-#     # Determine the current or requested year interval
-#     if requested_year:
-#         year_interval = calculate_year_interval_for_requested_year(requested_year)
-#     else:
-#         year_interval = calculate_current_zadok_year_interval()
-
-#     start_year, end_year = map(int, year_interval.split('-'))
-#     today = datetime.now().date()
-#     start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
-#     start_date = start_dates[start_year]
-    
-    
-#     # Retrieve the local date from the session
-#     local_date = session.get('local_date', datetime.now().strftime('%Y-%m-%d'))
-
-#     months_data, month_intervals = {}, {}
-#     for month_number in range(1, 13):
-#         days_in_month = 31 if month_number in [3, 6, 9, 12] else 30
-#         month_data, month_interval = generate_month_data_with_intervals(start_date, days_in_month, month_number)
-#         months_data[month_number] = month_data
-#         month_intervals[month_number] = month_interval  # Store month intervals
-#         start_date += timedelta(days=days_in_month)
-
-#     # Pass the calculated year_interval to your template
-#     return render_template('calendar.html', months_data=months_data, month_intervals=month_intervals, year_interval=year_interval, local_date=local_date,today=today.strftime('%Y-%m-%d'))
 
 def calculate_year_interval_for_requested_year(requested_year):    
     return f"{requested_year}-{requested_year + 1}"

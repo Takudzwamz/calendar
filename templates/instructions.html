@@ -8,14 +8,12 @@
       name="description"
       content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
     />
-    <meta
-      name="keywords"
-      content="Zadok Calendar, Biblical Calendar, Hebrew Calendar, Festivals, {{ year_interval }}"
-    />
+    <meta name="keywords" content="Zadok Calendar, Biblical Calendar, Hebrew Calendar, Jewish Holidays, Religious Festivals, Annual Calendar, Scriptural Calendar, {{ year_interval }}, Seasonal Celebrations, Bible, Old Testament, Jubilees, Book of Enoch, Passover, Sabbath, Unleavened Bread, Sacred Calendar, Divine Calendar,Essenes Calendar" />
+    <meta name="author" content="Takudzwa Mupanesure" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://solarcalendar.site/" />
+    <meta property="og:url" content="https://biblicalcalendar.site/" />
     <meta property="og:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
     <meta
       property="og:description"
@@ -28,7 +26,7 @@
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://solarcalendar.site/" />
+    <meta property="twitter:url" content="https://biblicalcalendar.site/" />
     <meta
       property="twitter:title"
       content="Zadok Biblical Calendar - {{ year_interval }}"
@@ -55,6 +53,7 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="canonical" href="https://biblicalcalendar.site/instructions" />
     <script>
       // Immediately set the theme based on user preference before the page content loads
       (function () {
@@ -64,6 +63,16 @@
         }
       })();
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Zadok Biblical Calendar",
+        "url": "https://biblicalcalendar.site/instructions",
+        "description": "Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+      }
+      </script>
+
     <style>
       body {
         background-color: #f8f9fa;
@@ -98,6 +107,27 @@
         background-color: #6750a4;
         border-color: #6750a4;
         border-radius: 15px;
+      }
+
+      #scrollBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;
+        border: none;
+        outline: none;
+        background-color: #6f42c1;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 10px;
+        display: block;
+        /* Ensure it's not set to none */
+      }
+  
+      #scrollBtn:hover {
+        background-color: #555;
       }
 
       .verses-header {
@@ -598,6 +628,10 @@
       </section>
     </div>
 
+    <button id="scrollBtn" title="Go to bottom">
+      <i class="fas fa-arrow-down"></i>
+    </button>
+
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-primary text-light">
       <div class="container p-4">
@@ -643,9 +677,9 @@
 
       <!-- Section: Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-        © 2024 Zadok Biblical Calendar:
-        <a class="text-light" href="https://solarcalendar.site/"
-          >solarcalendar.site</a
+        ©  {{ year_interval }} Zadok Biblical Calendar
+        <a class="text-light" href="https://biblicalcalendar.site/"
+          >biblicalcalendar.site</a
         >
       </div>
     </footer>
@@ -692,6 +726,55 @@
       });
 
       // Optional: Add CSS for fade-out effect
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var scrollBtn = document.getElementById("scrollBtn");
+        var lastScrollTop = 0; // Variable to store the last scroll position
+  
+        // Function to toggle scroll direction
+        function toggleScrollDirection() {
+          var currentScrollPos =
+            window.pageYOffset || document.documentElement.scrollTop;
+  
+          if (currentScrollPos > lastScrollTop) {
+            // Scrolling down
+            if (currentScrollPos > 20) {
+              scrollBtn.innerHTML = '<i class="fas fa-arrow-down"></i>';
+              scrollBtn.title = "Go to bottom";
+              scrollBtn.style.display = "block"; // Ensure button is visible when scrolling down
+            }
+          } else {
+            // Scrolling up
+            scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+            scrollBtn.title = "Go to top";
+            scrollBtn.style.display = "block"; // Ensure button is visible when scrolling up
+          }
+  
+          // Update the last scroll position to the current scroll position
+          lastScrollTop = currentScrollPos <= 0 ? 0 : currentScrollPos; // For Mobile or negative scrolling
+        }
+  
+        // Listen for scroll events to toggle the button state
+        window.onscroll = function () {
+          toggleScrollDirection();
+        };
+  
+        // Handle button click
+        scrollBtn.onclick = function () {
+          if (scrollBtn.title === "Go to bottom") {
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        };
+  
+        // Initially set the correct icon and title
+        toggleScrollDirection();
+      });
     </script>
   </body>
 </html>

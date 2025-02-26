@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Zadok Biblical Calendar - {{ year_interval }}</title>
+  <title>Zadok Biblical Calendar  {{ year_interval }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description"
     content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
@@ -11,7 +11,7 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://solarcalendar.site/" />
+  <meta property="og:url" content="https://biblicalcalendar.site/" />
   <meta property="og:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
   <meta property="og:description"
     content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
@@ -20,7 +20,7 @@
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://solarcalendar.site/" />
+  <meta property="twitter:url" content="https://biblicalcalendar.site/" />
   <meta property="twitter:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
   <meta property="twitter:description"
     content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
@@ -31,6 +31,8 @@
   <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet" />
 
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="canonical" href="https://biblicalcalendar.site/" />
+
   <script>
     // Immediately set the theme based on user preference before the page content loads
     (function () {
@@ -40,6 +42,16 @@
       }
     })();
   </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Zadok Biblical Calendar",
+      "url": "https://biblicalcalendar.site/",
+      "description": "Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+    }
+    </script>
+    
 
   <style>
     body {
@@ -271,7 +283,7 @@
 
     .dark-mode .calendar-header {
       background-color: #6750a4;
-      border-radius: 15px;
+      border-radius: 15px 15px 0 0;
       /* Or any color you prefer */
     }
 
@@ -402,26 +414,7 @@
       }
     }
 
-    #scrollBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 30px;
-      z-index: 99;
-      font-size: 18px;
-      border: none;
-      outline: none;
-      background-color: #6f42c1;
-      color: white;
-      cursor: pointer;
-      padding: 15px;
-      border-radius: 10px;
-      display: block;
-      /* Ensure it's not set to none */
-    }
-
-    #scrollBtn:hover {
-      background-color: #555;
-    }
+    
 
     @media (max-width: 768px) {
       .calendar-header {
@@ -554,22 +547,23 @@
                 {% for week in days|batch(7, '&nbsp;') %}
                 <tr>
                   {% for day in week %}
-                  <td
-                    class="{% if day.gregorian_date == local_date %}today-highlight{% elif day.is_sabbath %}sabbath{% else %}day-cell{% endif %}{% if day.holiday %} holiday{% endif %}{% if day.simplified_date %} clickable{% endif %}"
-                    {% if day.simplified_date and (day.holiday !="None" or day.is_sabbath) %}
-                    onclick="showInfo('{{ day.holiday }}', '{{ day.description }}','{{ day.is_sabbath|lower }}' )" {%
-                    endif %}>
-                    {% if day.simplified_date %}
+                  <td class="{% if day.gregorian_date == local_date %}today-highlight{% elif day.is_sabbath %}sabbath{% else %}day-cell{% endif %}{% if day.holiday %} holiday{% endif %}{% if day.simplified_date %} clickable{% endif %}"
+                  {% if day.simplified_date and (day.holiday != "None" or (day.holiday == "None" and day.is_sabbath)) %}
+                      onclick="showInfo('{{ day.holiday }}', '{{ day.description }}', '{{ day.is_sabbath|lower }}')"
+                    {% endif %}>
+                  {% if day.simplified_date %}
                     <span class="day-number">{{ day.simplified_date }}</span><br />
                     {{ day.gregorian_date }}
                     {% if day.holiday %}
-                    <div class="holiday-bar"></div>
+                      <div class="holiday-bar"></div>
                     {% endif %}
                     {% if day.is_sabbath %}
-                    <div class="sabbath-bar"></div>
+                      <div class="sabbath-bar"></div>
                     {% endif %}
-                    {% endif %}
-                  </td>
+                  {% endif %}
+                </td>
+                
+
                   {% endfor %}
                 </tr>
                 {% endfor %}
@@ -626,9 +620,7 @@
     </div>
 
   </div>
-  <button id="scrollBtn" title="Go to bottom">
-    <i class="fas fa-arrow-down"></i>
-  </button>
+  
 
   <!-- Footer -->
   <footer class="text-center text-lg-start bg-primary text-light">
@@ -656,8 +648,8 @@
       <!-- Section: Text -->
       <section class="mb-4">
         <p>
-          Thank you for visiting the Zadok Biblical Calendar. Get in touch
-          with me on my social medias.
+            Thank you for visiting the Zadok Biblical Calendar. Connect with me
+            on my social media platforms.
         </p>
         <p>Created with love by Takudzwa Mupanesure</p>
       </section>
@@ -666,8 +658,8 @@
 
     <!-- Section: Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-      © 2024 Zadok Biblical Calendar:
-      <a class="text-light" href="https://solarcalendar.site/">solarcalendar.site</a>
+      ©  {{ year_interval }} Zadok Biblical Calendar:
+      <a class="text-light" href="https://biblicalcalendar.site/">biblicalcalendar.site</a>
     </div>
   </footer>
 
@@ -700,24 +692,32 @@
   <script>
     function showInfo(holidayName, holidayDescription, isSabbath) {
       let contentHTML = "";
-
-      if (isSabbath) {
+    
+      // If it's a sabbath, add sabbath info.
+      if (isSabbath === true || isSabbath === "true") {
         contentHTML +=
-          "<h5>Shabbat Shalom/Happy Sabbath</h5><p>A day of rest and spiritual enrichment. Exodus 20:8-11 KJV:  Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: but the seventh day is the sabbath of 𐤉𐤄𐤅𐤄 thy Elohim: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days 𐤉𐤄𐤅𐤄 made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore 𐤉𐤄𐤅𐤄 blessed the sabbath day, and hallowed it.</p>";
+            "<h5>Shabbat Shalom/Happy Sabbath</h5><p>A day of rest and spiritual enrichment. Exodus 20:8-11 KJV:  Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: but the seventh day is the sabbath of 𐤉𐤄𐤅𐤄 thy Elohim: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days 𐤉𐤄𐤅𐤄 made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore 𐤉𐤄𐤅𐤄 blessed the sabbath day, and hallowed it.</p>";
       }
-
+    
+      // If a holiday exists, append holiday info.
       if (holidayName && holidayName !== "None") {
-        contentHTML +=
-          (contentHTML ? "<hr>" : "") +
-          `<h5>${holidayName}</h5><p>${holidayDescription}</p>`;
+        // If sabbath info was already added, add a separator.
+        if (contentHTML) {
+          contentHTML += "<hr>";
+        }
+        contentHTML += `<h5>${holidayName}</h5><p>${holidayDescription}</p>`;
       }
-
-      // Prevent showing the modal if there's no content to display (e.g., empty cells or "None" values)
+    
+      // If there's nothing to display, don't show the modal.
       if (!contentHTML) return;
-
+    
       $("#holidayModalBody").html(contentHTML);
       $("#holidayModal").modal("show");
     }
+    
+    
+
+
   </script>
 
   <script>
@@ -782,55 +782,7 @@
         .catch((error) => console.error("Error setting date:", error));
     });
   </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var scrollBtn = document.getElementById("scrollBtn");
-      var lastScrollTop = 0; // Variable to store the last scroll position
-
-      // Function to toggle scroll direction
-      function toggleScrollDirection() {
-        var currentScrollPos =
-          window.pageYOffset || document.documentElement.scrollTop;
-
-        if (currentScrollPos > lastScrollTop) {
-          // Scrolling down
-          if (currentScrollPos > 20) {
-            scrollBtn.innerHTML = '<i class="fas fa-arrow-down"></i>';
-            scrollBtn.title = "Go to bottom";
-            scrollBtn.style.display = "block"; // Ensure button is visible when scrolling down
-          }
-        } else {
-          // Scrolling up
-          scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-          scrollBtn.title = "Go to top";
-          scrollBtn.style.display = "block"; // Ensure button is visible when scrolling up
-        }
-
-        // Update the last scroll position to the current scroll position
-        lastScrollTop = currentScrollPos <= 0 ? 0 : currentScrollPos; // For Mobile or negative scrolling
-      }
-
-      // Listen for scroll events to toggle the button state
-      window.onscroll = function () {
-        toggleScrollDirection();
-      };
-
-      // Handle button click
-      scrollBtn.onclick = function () {
-        if (scrollBtn.title === "Go to bottom") {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
-          });
-        } else {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      };
-
-      // Initially set the correct icon and title
-      toggleScrollDirection();
-    });
-  </script>
+  
   <script>
     function scheduleReloadAtSixAM() {
       var now = new Date();
