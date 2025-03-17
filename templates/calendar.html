@@ -151,9 +151,9 @@
       color: #ffffff;
       /* White text */
       display: inline-block;
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
       border-radius: 50%;
       margin-right: 5px;
     }
@@ -387,6 +387,15 @@
       animation: spin 1s linear infinite;
     }
 
+    /* Adjust color, font-size, etc. to your preference */
+  .priest-info {
+    display: absolute;      /* or block if you want it on its own line */
+    font-size: 0.9rem;         /* slightly smaller than default */
+    color: #6750a4;            /* an example color, or #6750a4 if you prefer */
+    margin-top: 2px;
+   
+  }
+
     @keyframes spin {
       0% {
         transform: rotate(0deg);
@@ -427,21 +436,115 @@
       }
     }
 
-    @media (max-width: 576px) {
+    /* Already have up to 576px: tweak it more or add a second query. */
+@media (max-width: 576px) {
+  .table th,
+  .table td {
+    padding: 0.4rem; /* reduce from 0.5rem */
+    font-size: 0.6rem; /* reduce from 0.65rem */
+  }
 
-      .table th,
-      .table td {
-        padding: 0.5rem;
-        font-size: 0.65rem;
-      }
+  .day-cell .day-number {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 0.65rem;
+  }
 
-      .day-cell .day-number {
-        width: 28px;
-        height: 28px;
-        line-height: 28px;
-        font-size: 0.75rem;
-      }
-    }
+  .priest-info {
+    font-size: 0.5rem; /* or 0.45rem if still overflowing */
+  }
+}
+
+/* Optional extra step for very narrow screens (320-350px) */
+@media (max-width: 360px) {
+  .table th,
+  .table td {
+    padding: 0.3rem;
+    font-size: 0.55rem;
+  }
+
+  .day-cell .day-number {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 0.6rem;
+  }
+
+  .priest-info {
+    font-size: 0.4rem;
+  }
+}
+
+/* For medium devices (tablets, ~768-992px wide) */
+@media (max-width: 992px) {
+  .table th, .table td {
+    padding: 0.6rem;      /* Slightly smaller padding */
+    font-size: 0.8rem;    /* Slightly smaller text */
+  }
+  .day-cell .day-number {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 0.7rem;    /* smaller circle text */
+  }
+  .priest-info {
+    font-size: 0.6rem;    /* smaller priest name */
+  }
+}
+
+/* For small tablets / large phones (~768px wide) */
+@media (max-width: 768px) {
+  .table th, .table td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+  .day-cell .day-number {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 0.65rem;
+  }
+  .priest-info {
+    font-size: 0.55rem;
+  }
+}
+
+/* For typical phones (~576px wide) */
+@media (max-width: 576px) {
+  .table th, .table td {
+    padding: 0.4rem;
+    font-size: 0.7rem;
+  }
+  .day-cell .day-number {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 0.6rem;
+  }
+  .priest-info {
+    font-size: 0.45rem;
+  }
+}
+
+/* For very narrow screens (~320-400px wide, e.g. iPhone SE) */
+@media (max-width: 400px) {
+  .table th, .table td {
+    padding: 0.3rem;
+    font-size: 0.65rem;
+  }
+  .day-cell .day-number {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 0.55rem;
+  }
+  .priest-info {
+    font-size: 0.4rem;
+  }
+}
+
+    
   </style>
 </head>
 
@@ -553,7 +656,13 @@
                     {% endif %}>
                   {% if day.simplified_date %}
                     <span class="day-number">{{ day.simplified_date }}</span><br />
-                    {{ day.gregorian_date }}
+                    {{ day.gregorian_date }}<br>
+                    {% if day.priest_name %}
+                      <span class="priest-info">
+                        {{ day.priest_name }}
+                      </span>
+                    {% endif %}
+
                     {% if day.holiday %}
                       <div class="holiday-bar"></div>
                     {% endif %}
