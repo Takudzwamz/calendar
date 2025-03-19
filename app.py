@@ -123,69 +123,202 @@ holidays = {
     },
 }
 
+# -------------------- 1) 6-YEAR CYCLE CONSTANTS -------------------- #
 
-def ephem_date_to_datetime(ephem_date):
+EPOCH = datetime(2019, 3, 20)  # 20 March 2019 => Start of Zadok Year 2019
+CYCLE_DAYS = 6 * 364 + 7       # 2191
+DAYS_PER_YEAR = 364
+PRIEST_OFFSET = 151  # So that 3/20/2019 => day 5 of Gamul's block
+
+
+# The 24 priests from 1 Chronicles 24
+PRIESTS_24 = [
+    "Yehoyariv",  # 1) יְהוֹיָרִיב
+    "Yedayah",    # 2) יְדַעְיָה
+    "Charim",     # 3) חָרִם
+    "Seorim",    # 4) שְׂעוֹרִים
+    "Malkiyah",   # 5) מַלְכִּיָּה
+    "Miyamin",    # 6) מִיָּמִין
+    "Haqqots",    # 7) הַקֹּץ  (sometimes “Haqqotz”)
+    "Aviyah",     # 8) אֲבִיָּה
+    "Yeshua",     # 9) יֵשׁוּעַ
+    "Shekhanyah", # 10) שְׁכַנְיָה
+    "Elyashiv",   # 11) אֶלְיָשִׁיב
+    "Yakim",      # 12) יָקִים
+    "Chuppah",    # 13) חוּפָּה
+    "Yeshevav",  # 14) יְשֵׁבְאָב (sometimes “Yeshebeab”)
+    "Bilgah",     # 15) בִּלְגָּה
+    "Immer",      # 16) אִמֵּר
+    "Chezir",     # 17) חֵזִיר
+    "Hapitzetz",  # 18) הַפִּצֵּץ (sometimes “Happizzez”)
+    "Petachyah",  # 19) פְּתַחְיָה
+    "Yechezkel",  # 20) יְחֶזְקֵאל
+    "Yakhin",     # 21) יָכִין
+    "Gamul",      # 22) גָּמוּל
+    "Delayah",    # 23) דְּלָיָה
+    "Maazyah"     # 24) מַעַזְיָה
+]
+
+
+
+def get_priestly_day_count(gregorian_date):
     """
-    Convert an ephem.Date object into a datetime.datetime object.
-    
-    Parameters:
-    - ephem_date: The ephem.Date object to convert.
-    
-    Returns:
-    - A datetime.datetime object representing the same point in time.
+    Returns how many 'counted' Zadok days have passed since 3/20/2019,
+    ignoring the leap weeks after each 6-year block.
+    If gregorian_date == 3/20/2019, result = 0.
+    If date is earlier or later, we do a 6-year cycle calculation.
     """
-    # Convert ephem.Date to a string and then parse it with datetime.strptime
-    return datetime.strptime(str(ephem_date), '%Y/%m/%d %H:%M:%S')
-
-
-
-def find_nearest_wednesday(year):
-    """
-    Find the nearest Wednesday to the vernal equinox for a given year.
+    # 1) Find which Zadok year 'date' belongs to
+    #    (like how we do in 'calculate_year_interval_for_requested_year')
+    #    Or directly figure out how many cycles & leftover years are completed
+    #    prior to 'date'.
     
-    Parameters:
-    - year: The year for which to find the vernal equinox.
+    # Step A: Determine the Zadok year for 'gregorian_date'
+    #         We'll search or do the same logic as your code. 
+    #         For demonstration, let's do a simpler approach:
+    #         We compare 'gregorian_date' to get_zadok_year_start(...) for each year 
+    #         until we find the largest year start <= gregorian_date.
     
-    Returns:
-    - A datetime.datetime object representing the nearest Wednesday.
+    # (Or more direct approach: 
+    #   1) compute how many 6-year cycles have fully ended, 
+    #   2) how many leftover years ended, 
+    #   3) leftover days in the current year.)
+    
+    # For brevity, let's do a 'while' approach. (Inefficient if date is far, 
+    # but easy to illustrate.)
+    
+    if gregorian_date < EPOCH:
+        # handle dates before 3/20/2019 similarly
+        # or raise an exception if not needed
+        pass
+    
+    # Start from year = 2019
+    current_zadok_year = 2019
+    day_count = 0  # how many 'priestly' days have passed
+    
+    # While the start of the next Zadok year is <= gregorian_date, 
+    # we add 364 to day_count and move to the next year, 
+    # plus every time we complete 6 leftover years, we skip a 7-day leap.
+    
+    while True:
+        start_this_year = get_zadok_year_start(current_zadok_year)
+        start_next_year = get_zadok_year_start(current_zadok_year + 1)
+        if start_next_year <= gregorian_date:
+            # we completed the entire 'current_zadok_year'
+            day_count += 364
+            # Check if we just finished a 6-year block
+            # e.g. if (current_zadok_year - 2019 + 1) % 6 == 0, 
+            # then we skip a leap in real time, but day_count doesn't get incremented
+            # by those 7 days.
+            current_zadok_year += 1
+        else:
+            # We are in the partial year
+            # Add how many days into that year (since 'start_this_year') 
+            partial_days = (gregorian_date - start_this_year).days
+            # partial_days is how many real days have passed, 
+            # but that matches the priestly day count for the partial year 
+            # (no leaps in mid-year)
+            day_count += partial_days
+            break
+    
+    # If gregorian_date is exactly on the next year's start, partial_days=364 => done
+    return day_count
+
+def get_priest_for_date(gregorian_date):
     """
-    equinox_date = ephem_date_to_datetime(ephem.next_vernal_equinox(str(year)))
-    # Adjust for EDT or any other timezone if necessary. This example assumes UTC.
-    days_until_wednesday = (2 - equinox_date.weekday()) % 7
-    if days_until_wednesday > 3:
-        days_until_wednesday -= 7
-    nearest_wednesday = equinox_date + timedelta(days=days_until_wednesday)
-    return nearest_wednesday
+    Returns (priest_name, day_in_7) for the given date,
+    using the 24-priest cycle with each priest serving 7 days,
+    ignoring leap weeks after 6-year intervals,
+    and offset so that 3/20/2019 is day 3 of Gamul's block.
+    """
+    # 1) get the 'counted' day index
+    pdays = get_priestly_day_count(gregorian_date)
+    
+    # 2) shift by PRIEST_OFFSET so that 3/20/2019 => Gamul day 3
+    cyclePos = (pdays + PRIEST_OFFSET) % (24 * 7)  # 168
+    
+    # 3) figure out which priest
+    priest_index = cyclePos // 7  # 0..23
+    day_in_block = (cyclePos % 7) + 1  # 1..7
+    
+    priest_name = PRIESTS_24[priest_index]
+    return priest_name, day_in_block
+
+
+def divmod_6(delta):
+    """
+    Return (cycles, remainder) for an integer 'delta' using a 6-year cycle.
+    In Python, divmod() on negative numbers still gives a non-negative remainder.
+    E.g., divmod(-1, 6) => (-1, 5).
+    That means -1 = -1*6 + 5, which is correct.
+    """
+    cycles, remainder = divmod(delta, 6)
+    return cycles, remainder
 
 
 
+def get_zadok_year_start(gregorian_year):
+    """
+    Returns the start date (as a datetime) for the Zadok year labeled 'gregorian_year'
+    based on a 6-year cycle from epoch = 20 March 2019.
+    Handles both future (year >= 2019) and past (year < 2019).
+    """
+    delta = gregorian_year - 2019  # how many years from 2019
+
+    # cycles => how many full 6-year blocks
+    # remainder => leftover years within the block
+    cycles, remainder = divmod_6(delta)  # works even if delta < 0
+
+    # total days from epoch
+    # each cycle is 2191 days, each leftover year is 364 days
+    total_days = cycles * CYCLE_DAYS + remainder * DAYS_PER_YEAR
+
+    # Start date = EPOCH + total_days
+    return EPOCH + timedelta(days=total_days)
+
+
+# -------------------- 2) GENERATE START DATES  -------------------- #
 
 def generate_simplified_calendar_start_dates(start_year, end_year):
+    """
+    For each 'year' in [start_year..end_year], compute the Zadok year start date
+    using the 6-year cycle approach, including years before 2019.
+    """
     start_dates = {}
     for year in range(start_year, end_year + 1):
-        # Directly use find_nearest_wednesday to get the start date
-        nearest_wednesday = find_nearest_wednesday(year)
-        start_dates[year] = nearest_wednesday
+        start_dates[year] = get_zadok_year_start(year)
     return start_dates
 
 
-
 def generate_month_data_with_intervals(start_date, days_in_month, month_number):
+    """
+    Builds day-by-day data for a Zadok month. Unchanged from your code.
+    """
     month_data = []
-    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
     padding_days = (start_date.weekday() + 1) % 7
-    month_data += [{'simplified_date': '', 'gregorian_date': '', 'weekday': None, 'holiday': None, 'description': None} for _ in range(padding_days)]
+    month_data += [
+        {'simplified_date': '', 'gregorian_date': '', 'weekday': None,
+         'holiday': None, 'description': None}
+        for _ in range(padding_days)
+    ]
     
-    end_date = start_date + timedelta(days=days_in_month - 1)  # Calculate end date of the month
-    month_interval = f"{month_names[start_date.month-1]}-{month_names[end_date.month-1]}"
+    end_date = start_date + timedelta(days=days_in_month - 1)
+    month_interval = f"{month_names[start_date.month - 1]}-{month_names[end_date.month - 1]}"
     
     for day in range(1, days_in_month + 1):
         holiday_name, holiday_description = None, None
-        # Determine if the day is a Sabbath (Saturday) by checking if it's the 7th day of the week in the Zadok calendar
-        is_sabbath = (start_date.weekday() == 5)  # Sabbath is the 7th day (0-based index for Sunday is 0)
-        for holiday, details in holidays.items():
+        is_sabbath = (start_date.weekday() == 5)  # Saturday=5
+        
+        # Now figure out which priest is serving
+        priest_name, priest_day = get_priest_for_date(start_date)
+        
+        # Check if it's a holiday
+        for hname, details in holidays.items():
             if month_number == details["month"] and day in details["days"]:
-                holiday_name, holiday_description = holiday, details["description"]
+                holiday_name, holiday_description = hname, details["description"]
                 break
         month_data.append({
             'simplified_date': f"{day:02}",
@@ -193,80 +326,76 @@ def generate_month_data_with_intervals(start_date, days_in_month, month_number):
             'weekday': (start_date.weekday() + 1) % 7,
             'holiday': holiday_name,
             'description': holiday_description,
-            'month_interval': month_interval,  # Add month_interval to each day's data
-            'is_sabbath': is_sabbath  # Mark Sabbath days
+            'month_interval': month_interval,
+            'is_sabbath': is_sabbath,
+             # Store the priest info
+            'priest_name': priest_name,
+            'priest_day': priest_day
         })
         start_date += timedelta(days=1)
     
     while len(month_data) % 7 != 0:
-        month_data.append({'simplified_date': '', 'gregorian_date': '', 'weekday': None, 'holiday': None, 'description': None, 'is_sabbath': False})
+        month_data.append({
+            'simplified_date': '',
+            'gregorian_date': '',
+            'weekday': None,
+            'holiday': None,
+            'description': None,
+            'is_sabbath': False,
+            'priest_name': None,
+            'priest_day': None
+        })
     return month_data, month_interval
 
+
+# -------------------- 3) YEAR INTERVAL CALCULATIONS -------------------- #
+
 def calculate_current_zadok_year_interval():
-    today = datetime.now()
-    current_year = today.year
-    
-    # Find nearest Wednesday to the vernal equinox for the current and next year
-    nearest_wednesday_this_year = find_nearest_wednesday(current_year)
-    nearest_wednesday_next_year = find_nearest_wednesday(current_year + 1)
-    
-    # Determine the correct year interval based on today's date
-    if today < nearest_wednesday_this_year:
-        # If today is before this year's nearest Wednesday to the equinox
-        year_interval = f"{current_year - 1}-{current_year}"
-    elif today >= nearest_wednesday_this_year and today < nearest_wednesday_next_year:
-        # If today is after this year's equinox but before the next year's
-        year_interval = f"{current_year}-{current_year + 1}"
-    else:
-        # If today is after the next year's equinox (should rarely happen, but included for completeness)
-        year_interval = f"{current_year + 1}-{current_year + 2}"
-    
-    return year_interval
+    """
+    Finds which Zadok year 'today' belongs to, returning e.g. "2018-2019" or "2025-2026".
+    We do a small local search near the current Gregorian year to find
+    the largest Zadok year whose start <= today < next year's start.
+    """
+    today = datetime.now().date()
+    current_greg_year = today.year
+
+    # We'll search a small range around 'current_greg_year'
+    possible_years = [current_greg_year - 1, current_greg_year, current_greg_year + 1, current_greg_year + 2]
+    # Build (year, start_date)
+    year_starts = [(y, get_zadok_year_start(y).date()) for y in possible_years]
+    # Sort by the start date
+    year_starts.sort(key=lambda tup: tup[1])
+
+    zadok_year = None
+    for (y, sdate) in year_starts:
+        if sdate <= today:
+            zadok_year = y
+    if zadok_year is None:
+        # fallback if not found
+        zadok_year = current_greg_year
+
+    return f"{zadok_year}-{zadok_year + 1}"
+
 
 def calculate_year_interval_for_requested_year(requested_year):
-    nearest_wednesday_this_year = find_nearest_wednesday(requested_year)
-    nearest_wednesday_next_year = find_nearest_wednesday(requested_year + 1)
-    
-    # Determine the correct year interval based on the requested year
-    if datetime.now() < nearest_wednesday_this_year:
-        year_interval = f"{requested_year - 1}-{requested_year}"
-    elif datetime.now() >= nearest_wednesday_this_year and datetime.now() < nearest_wednesday_next_year:
-        year_interval = f"{requested_year}-{requested_year + 1}"
-    else:
-        year_interval = f"{requested_year + 1}-{requested_year + 2}"
-    
-    return year_interval
+    """
+    If user says ?year=2015, we produce "2015-2016" (Zadok year 2015).
+    """
+    return f"{requested_year}-{requested_year + 1}"
 
 
-
-""" message = Mail(
-    from_email='info@sputniktech.co',
-    to_emails='mupanesuret48@gmail.com',
-    subject='Sending with Twilio SendGrid is Fun', 
-    html_content='<strong>and easy to do anywhere, even with Python</strong>')
-try:
-    sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-    response = sg.send(message)
-    print(response.status_code)
-    print(response.body)
-    print(response.headers)
-except Exception as e:
-    print(e.message) """
+# -------------------- 4) FLASK ROUTES -------------------- #
 
 @app.route('/set-date')
 def set_date():
-    
     local_date = request.args.get('date')
-    # You can store the local date in the session to use it in other routes
     session['local_date'] = local_date
     return jsonify({"message": "Local date received", "date": local_date})
 
 
 @app.route('/sitemap.xml')
 def sitemap():
-    # Get the dynamic year interval (using your existing function)
-    year_interval = calculate_current_zadok_year_interval()  
-    # Alternatively, if you have a requested_year, adjust accordingly.
+    year_interval = calculate_current_zadok_year_interval()
     current_date = date.today().isoformat()
     sitemap_xml = render_template('sitemap_template.xml', year_interval=year_interval, current_date=current_date)
     response = make_response(sitemap_xml)
@@ -280,10 +409,8 @@ def robots_txt():
 
 @app.route('/')
 def home():
-    # Extract the requested year from the query parameter, if present
     requested_year = request.args.get('year', default=None, type=int)
 
-    # Determine the current or requested year interval
     if requested_year:
         year_interval = calculate_year_interval_for_requested_year(requested_year)
     else:
@@ -291,15 +418,16 @@ def home():
 
     start_year, end_year = map(int, year_interval.split('-'))
     today = datetime.now().date()
+
+    # Generate the start date for 'start_year'
     start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
     start_date = start_dates[start_year]
+    zadok_new_year_str = start_date.strftime('%Y-%m-%d')
 
-    # Retrieve the local date from the session or default to today
+    # Retrieve or set local_date
     local_date = session.get('local_date', today.strftime('%Y-%m-%d'))
-    # Convert stored local_date to a date object for comparison
     stored_date = datetime.strptime(local_date, '%Y-%m-%d').date()
 
-    # If the stored date is before today, update it
     if stored_date < today:
         local_date = today.strftime('%Y-%m-%d')
         session['local_date'] = local_date
@@ -307,25 +435,29 @@ def home():
     months_data, month_intervals = {}, {}
     for month_number in range(1, 13):
         days_in_month = 31 if month_number in [3, 6, 9, 12] else 30
-        month_data, month_interval = generate_month_data_with_intervals(start_date, days_in_month, month_number)
+        month_data, month_interval = generate_month_data_with_intervals(
+            start_date, days_in_month, month_number
+        )
         months_data[month_number] = month_data
-        month_intervals[month_number] = month_interval  # Store month intervals
+        month_intervals[month_number] = month_interval
         start_date += timedelta(days=days_in_month)
 
-    return render_template('calendar.html', 
-                           months_data=months_data, 
-                           month_intervals=month_intervals, 
-                           year_interval=year_interval, 
-                           local_date=local_date,
-                           today=today.strftime('%Y-%m-%d'))
+    return render_template(
+        'calendar.html',
+        months_data=months_data,
+        month_intervals=month_intervals,
+        year_interval=year_interval,
+        local_date=local_date,
+        today=today.strftime('%Y-%m-%d'),
+        zadok_new_year=zadok_new_year_str
+    )
 
-
-def calculate_year_interval_for_requested_year(requested_year):    
-    return f"{requested_year}-{requested_year + 1}"
 
 @app.route('/instructions')
 def instructions():
     return render_template('instructions.html')
 
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80,debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
+

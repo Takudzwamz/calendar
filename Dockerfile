@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Define the argument for the Flask secret key
 ARG FLASK_SECRET_KEY
