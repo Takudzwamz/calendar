@@ -422,6 +422,7 @@ def home():
     # Generate the start date for 'start_year'
     start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
     start_date = start_dates[start_year]
+    zadok_new_year_str = start_date.strftime('%Y-%m-%d')
 
     # Retrieve or set local_date
     local_date = session.get('local_date', today.strftime('%Y-%m-%d'))
@@ -447,7 +448,8 @@ def home():
         month_intervals=month_intervals,
         year_interval=year_interval,
         local_date=local_date,
-        today=today.strftime('%Y-%m-%d')
+        today=today.strftime('%Y-%m-%d'),
+        zadok_new_year=zadok_new_year_str
     )
 
 
@@ -457,5 +459,5 @@ def instructions():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
 
