@@ -6,8 +6,7 @@ from datetime import datetime, timedelta, date
 import calendar
 from flask.cli import load_dotenv
 import os
-""" from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail """
+
 
 app = Flask(__name__)
 load_dotenv() 
@@ -161,119 +160,97 @@ PRIESTS_24 = [
 
 
 
+
+# -------------------- 2) HELPER: FIND CURRENT CYCLE -------------------- #
+def find_current_cycle(gregorian_date):
+    """
+    Returns a tuple (current_year, cycle_start, next_cycle_start)
+    where cycle_start is the Gregorian date for the start of the Zadok year 
+    for the current cycle, and next_cycle_start is the start date of the next cycle.
+    This works for both dates on/after and before EPOCH.
+    """
+    if gregorian_date >= EPOCH:
+        current_year = 2019
+        while get_zadok_year_start(current_year + 1) <= gregorian_date:
+            current_year += 1
+        return current_year, get_zadok_year_start(current_year), get_zadok_year_start(current_year + 1)
+    else:
+        # For dates before EPOCH, decrement until the start is <= gregorian_date.
+        current_year = 2019 - 1
+        while get_zadok_year_start(current_year) > gregorian_date:
+            current_year -= 1
+        return current_year, get_zadok_year_start(current_year), get_zadok_year_start(current_year + 1)
+
+# -------------------- 3) COUNTED DAY CALCULATION -------------------- #
 def get_priestly_day_count(gregorian_date):
     """
-    Returns how many 'counted' Zadok days have passed since 3/20/2019,
-    ignoring the leap weeks after each 6-year block.
-    If gregorian_date == 3/20/2019, result = 0.
-    If date is earlier or later, we do a 6-year cycle calculation.
+    Returns the 'counted' Zadok day offset from EPOCH (2019-03-20) if the date
+    falls within the counted portion of a cycle.
+    If the date falls within a leap week (non-counted days), returns None.
+    Works for dates both after and before EPOCH.
     """
-    # 1) Find which Zadok year 'date' belongs to
-    #    (like how we do in 'calculate_year_interval_for_requested_year')
-    #    Or directly figure out how many cycles & leftover years are completed
-    #    prior to 'date'.
+    current_year, cycle_start, next_cycle_start = find_current_cycle(gregorian_date)
+    # Counted portion of the cycle runs for 364 days starting at cycle_start
+    counted_end = cycle_start + timedelta(days=DAYS_PER_YEAR - 1)  # last counted day
     
-    # Step A: Determine the Zadok year for 'gregorian_date'
-    #         We'll search or do the same logic as your code. 
-    #         For demonstration, let's do a simpler approach:
-    #         We compare 'gregorian_date' to get_zadok_year_start(...) for each year 
-    #         until we find the largest year start <= gregorian_date.
-    
-    # (Or more direct approach: 
-    #   1) compute how many 6-year cycles have fully ended, 
-    #   2) how many leftover years ended, 
-    #   3) leftover days in the current year.)
-    
-    # For brevity, let's do a 'while' approach. (Inefficient if date is far, 
-    # but easy to illustrate.)
-    
-    if gregorian_date < EPOCH:
-        # handle dates before 3/20/2019 similarly
-        # or raise an exception if not needed
-        pass
-    
-    # Start from year = 2019
-    current_zadok_year = 2019
-    day_count = 0  # how many 'priestly' days have passed
-    
-    # While the start of the next Zadok year is <= gregorian_date, 
-    # we add 364 to day_count and move to the next year, 
-    # plus every time we complete 6 leftover years, we skip a 7-day leap.
-    
-    while True:
-        start_this_year = get_zadok_year_start(current_zadok_year)
-        start_next_year = get_zadok_year_start(current_zadok_year + 1)
-        if start_next_year <= gregorian_date:
-            # we completed the entire 'current_zadok_year'
-            day_count += 364
-            # Check if we just finished a 6-year block
-            # e.g. if (current_zadok_year - 2019 + 1) % 6 == 0, 
-            # then we skip a leap in real time, but day_count doesn't get incremented
-            # by those 7 days.
-            current_zadok_year += 1
+    # If the date falls in the leap week (after counted days but before next cycle), no priest serves.
+    if cycle_start <= gregorian_date <= counted_end:
+        # Date is within counted days; proceed normally.
+        offset_in_year = (gregorian_date - cycle_start).days
+    elif gregorian_date > counted_end and gregorian_date < next_cycle_start:
+        # Date is in the leap week.
+        return None
+    else:
+        # For backward dates, similar check applies.
+        if gregorian_date < cycle_start:
+            offset_in_year = (gregorian_date - cycle_start).days  # will be negative
+            # If date falls in the "reverse leap week" period, return None.
+            # (Assuming symmetry: reverse leap week is the period between next_cycle_start of previous cycle and cycle_start.)
+            prev_cycle_start = get_zadok_year_start(current_year)
+            prev_counted_end = prev_cycle_start + timedelta(days=DAYS_PER_YEAR - 1)
+            if gregorian_date > prev_counted_end and gregorian_date < cycle_start:
+                return None
         else:
-            # We are in the partial year
-            # Add how many days into that year (since 'start_this_year') 
-            partial_days = (gregorian_date - start_this_year).days
-            # partial_days is how many real days have passed, 
-            # but that matches the priestly day count for the partial year 
-            # (no leaps in mid-year)
-            day_count += partial_days
-            break
-    
-    # If gregorian_date is exactly on the next year's start, partial_days=364 => done
-    return day_count
+            offset_in_year = (gregorian_date - cycle_start).days
 
+    # Now, count full cycles between EPOCH and cycle_start.
+    if gregorian_date >= EPOCH:
+        full_years = current_year - 2019  # each contributes 364 counted days
+        base_count = full_years * DAYS_PER_YEAR
+    else:
+        full_years = 2019 - current_year
+        base_count = - (full_years * DAYS_PER_YEAR)
+
+    return base_count + offset_in_year
+
+# -------------------- 4) PRIEST ASSIGNMENT -------------------- #
 def get_priest_for_date(gregorian_date):
     """
-    Returns (priest_name, day_in_7) for the given date,
-    using the 24-priest cycle with each priest serving 7 days,
-    ignoring leap weeks after 6-year intervals,
-    and offset so that 3/20/2019 is day 3 of Gamul's block.
+    Returns (priest_name, day_in_7) for the given date.
+    If the date is within a leap week (non-counted), returns (None, None).
     """
-    # 1) get the 'counted' day index
-    pdays = get_priestly_day_count(gregorian_date)
-    
-    # 2) shift by PRIEST_OFFSET so that 3/20/2019 => Gamul day 3
-    cyclePos = (pdays + PRIEST_OFFSET) % (24 * 7)  # 168
-    
-    # 3) figure out which priest
-    priest_index = cyclePos // 7  # 0..23
-    day_in_block = (cyclePos % 7) + 1  # 1..7
-    
-    priest_name = PRIESTS_24[priest_index]
-    return priest_name, day_in_block
+    day_count = get_priestly_day_count(gregorian_date)
+    if day_count is None:
+        return None, None  # No priest during the leap week.
+    cyclePos = (day_count + PRIEST_OFFSET) % (24 * 7)  # 168-day cycle
+    priest_index = cyclePos // 7
+    day_in_block = (cyclePos % 7) + 1
+    return PRIESTS_24[priest_index], day_in_block
 
-
+# -------------------- 5) YEAR START CALCULATION -------------------- #
 def divmod_6(delta):
-    """
-    Return (cycles, remainder) for an integer 'delta' using a 6-year cycle.
-    In Python, divmod() on negative numbers still gives a non-negative remainder.
-    E.g., divmod(-1, 6) => (-1, 5).
-    That means -1 = -1*6 + 5, which is correct.
-    """
     cycles, remainder = divmod(delta, 6)
     return cycles, remainder
 
-
-
 def get_zadok_year_start(gregorian_year):
     """
-    Returns the start date (as a datetime) for the Zadok year labeled 'gregorian_year'
-    based on a 6-year cycle from epoch = 20 March 2019.
-    Handles both future (year >= 2019) and past (year < 2019).
+    Returns the Gregorian date for the start of the Zadok year labeled 'gregorian_year'
+    based on the 6-year cycle (each cycle: 2191 real days = 2184 counted days + 7 leap days).
+    This works for both years >= 2019 and years < 2019.
     """
-    delta = gregorian_year - 2019  # how many years from 2019
-
-    # cycles => how many full 6-year blocks
-    # remainder => leftover years within the block
-    cycles, remainder = divmod_6(delta)  # works even if delta < 0
-
-    # total days from epoch
-    # each cycle is 2191 days, each leftover year is 364 days
+    delta = gregorian_year - 2019
+    cycles, remainder = divmod_6(delta)
     total_days = cycles * CYCLE_DAYS + remainder * DAYS_PER_YEAR
-
-    # Start date = EPOCH + total_days
     return EPOCH + timedelta(days=total_days)
 
 

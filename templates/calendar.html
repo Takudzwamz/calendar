@@ -389,7 +389,7 @@
 
     /* Adjust color, font-size, etc. to your preference */
   .priest-info {
-    display: absolute;      /* or block if you want it on its own line */
+    display: block;      /* or block if you want it on its own line */
     font-size: 0.9rem;         /* slightly smaller than default */
     color: #6750a4;            /* an example color, or #6750a4 if you prefer */
     margin-top: 2px;
@@ -650,7 +650,7 @@
                 {% for week in days|batch(7, '&nbsp;') %}
                 <tr>
                   {% for day in week %}
-                  <td class="{% if day.gregorian_date == local_date %}today-highlight{% elif day.is_sabbath %}sabbath{% else %}day-cell{% endif %}{% if day.holiday %} holiday{% endif %}{% if day.simplified_date %} clickable{% endif %}"
+                  <td class="{% if day.gregorian_date == local_date %}today-highlight{% elif day.is_sabbath %}sabbath{% else %}day-cell{% endif %}{% if day.holiday %} holiday{% endif %}{% if day.simplified_date %} clickable{% endif %} clickable-cell"
                   {% if day.simplified_date and (day.holiday != "None" or (day.holiday == "None" and day.is_sabbath)) %}
                       onclick="showInfo('{{ day.holiday }}', '{{ day.description }}', '{{ day.is_sabbath|lower }}')"
                     {% endif %}>
