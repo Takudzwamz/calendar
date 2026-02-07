@@ -320,7 +320,7 @@ def get_priest_for_date(gregorian_date):
 def get_todays_summary(gregorian_date, zadok_year_start):
     """
     Returns a summary of today including:
-    - Current Tsadak date (month/day)
+    - Current Tsadaq date (month/day)
     - Priest serving
     - Moon phase
     - Is it a Sabbath?
@@ -334,10 +334,10 @@ def get_todays_summary(gregorian_date, zadok_year_start):
     if hasattr(zadok_year_start, 'date'):
         zadok_year_start = zadok_year_start.date()
     
-    # Calculate Tsadak date
+    # Calculate Tsadaq date
     days_since_start = (gregorian_date - zadok_year_start).days
     
-    # Calculate which month and day in Tsadak calendar
+    # Calculate which month and day in Tsadaq calendar
     tsadak_month = 1
     tsadak_day = days_since_start + 1
     
@@ -400,7 +400,7 @@ def get_next_holiday(gregorian_date, zadok_year_start):
     if hasattr(zadok_year_start, 'date'):
         zadok_year_start = zadok_year_start.date()
     
-    # Calculate current Tsadak position
+    # Calculate current Tsadaq position
     days_since_start = (gregorian_date - zadok_year_start).days
     
     # Build a list of all holidays with their absolute day position in the year
@@ -613,7 +613,7 @@ def calculate_year_interval_for_requested_year(requested_year):
 @app.route('/export-calendar')
 def export_calendar():
     """
-    Generate an .ics file with all holidays for the current Tsadak year.
+    Generate an .ics file with all holidays for the current Tsadaq year.
     """
     requested_year = request.args.get('year', default=None, type=int)
     
@@ -632,10 +632,10 @@ def export_calendar():
     ics_lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
-        "PRODID:-//Tsadak Calendar//Biblical Calendar//EN",
+        "PRODID:-//Tsadaq Calendar//Biblical Calendar//EN",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        f"X-WR-CALNAME:Tsadak Calendar {year_interval}",
+        f"X-WR-CALNAME:Tsadaq Calendar {year_interval}",
     ]
     
     # Add each holiday
