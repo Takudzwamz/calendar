@@ -2,22 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Understanding the Zadok Biblical Calendar</title>
+    <title>Understanding the Tsadak Biblical Calendar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+      content="Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar."
     />
-    <meta name="keywords" content="Zadok Calendar, Biblical Calendar, Hebrew Calendar, Jewish Holidays, Religious Festivals, Annual Calendar, Scriptural Calendar, {{ year_interval }}, Seasonal Celebrations, Bible, Old Testament, Jubilees, Book of Enoch, Passover, Sabbath, Unleavened Bread, Sacred Calendar, Divine Calendar,Essenes Calendar" />
+    <meta name="keywords" content="Tsadak Calendar, Biblical Calendar, Hebrew Calendar, Jewish Holidays, Religious Festivals, Annual Calendar, Scriptural Calendar, {{ year_interval }}, Seasonal Celebrations, Bible, Old Testament, Jubilees, Book of Enoch, Passover, Sabbath, Unleavened Bread, Sacred Calendar, Divine Calendar,Essenes Calendar" />
     <meta name="author" content="Takudzwa Mupanesure" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://biblicalcalendar.site/" />
-    <meta property="og:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
+    <meta property="og:title" content="Tsadak Biblical Calendar - {{ year_interval }}" />
     <meta
       property="og:description"
-      content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+      content="Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar."
     />
     <meta
       property="og:image"
@@ -29,11 +29,11 @@
     <meta property="twitter:url" content="https://biblicalcalendar.site/" />
     <meta
       property="twitter:title"
-      content="Zadok Biblical Calendar - {{ year_interval }}"
+      content="Tsadak Biblical Calendar - {{ year_interval }}"
     />
     <meta
       property="twitter:description"
-      content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+      content="Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar."
     />
     <meta
       property="twitter:image"
@@ -48,6 +48,9 @@
       href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -67,46 +70,112 @@
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "Zadok Biblical Calendar",
+        "name": "Tsadak Biblical Calendar",
         "url": "https://biblicalcalendar.site/instructions",
-        "description": "Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+        "description": "Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar."
       }
       </script>
 
     <style>
-      body {
-        background-color: #f8f9fa;
+      :root {
+        --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        --accent-gold: #d4af37;
+        --accent-gold-light: #f4d03f;
+        --accent-copper: #b87333;
+        --primary-deep: #1a1a2e;
+        --primary-mid: #16213e;
+        --primary-light: #0f3460;
+        --text-light: #f8f9fa;
+        --text-gold: #e8d5b7;
+        --holiday-amber: #ff8c00;
       }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(180deg, #f5f0e8 0%, #ebe4d8 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        min-height: 100vh;
+      }
+
+      h1, h2, h3, h4, h5, .navbar-brand {
+        font-family: 'Cinzel', serif;
+      }
+
       ::-webkit-scrollbar {
-        width: 12px;
+        width: 10px;
       }
 
       ::-webkit-scrollbar-track {
-        background-color: #6750a4;
-        -webkit-border-radius: 10px;
+        background: var(--primary-deep);
         border-radius: 10px;
       }
 
       ::-webkit-scrollbar-thumb {
-        -webkit-border-radius: 10px;
         border-radius: 10px;
-        background: #ff9800;
+        background: linear-gradient(180deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
       }
 
       .bg-primary {
-        background-color: #6750a4 !important;
+        background: var(--primary-gradient) !important;
       }
+
+      .navbar {
+        box-shadow: 0 4px 20px rgba(26, 26, 46, 0.2);
+        padding: 12px 0;
+      }
+
+      .navbar-brand {
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+        color: var(--accent-gold) !important;
+        font-weight: 600;
+      }
+
+      .nav-link {
+        color: var(--text-gold) !important;
+        transition: color 0.3s ease;
+        font-weight: 500;
+      }
+
+      .nav-link:hover {
+        color: var(--accent-gold-light) !important;
+      }
+
       .btn-primary {
-        color: #fff;
-        background-color: #6750a4;
-        border-color: #6750a4;
-        border-radius: 15px;
+        color: var(--primary-deep);
+        background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
       }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        color: var(--primary-deep);
+      }
+
       .btn-secondary {
-        color: #fff;
-        background-color: #6750a4;
-        border-color: #6750a4;
-        border-radius: 15px;
+        color: var(--text-light);
+        background: var(--primary-gradient);
+        border: 1px solid var(--accent-gold);
+        border-radius: 25px;
+        padding: 10px 24px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+        color: var(--primary-deep);
+        border-color: var(--accent-gold);
       }
 
       #scrollBtn {
@@ -117,82 +186,139 @@
         font-size: 18px;
         border: none;
         outline: none;
-        background-color: #6f42c1;
-        color: white;
+        background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+        color: var(--primary-deep);
         cursor: pointer;
         padding: 15px;
-        border-radius: 10px;
+        border-radius: 15px;
         display: block;
-        /* Ensure it's not set to none */
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
       }
   
       #scrollBtn:hover {
-        background-color: #555;
+        background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
       }
 
       .verses-header {
         text-align: center;
         margin-bottom: 40px;
+        font-family: 'Cinzel', serif;
+        color: var(--primary-deep);
       }
       .verse-section {
-        //background: white;
-        border-radius: 8px;
-        border: 1px solid #ff9800;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 20px;
-        margin-bottom: 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        box-shadow: 0 8px 30px rgba(26, 26, 46, 0.08);
+        padding: 25px;
+        margin-bottom: 25px;
+        background: #fff;
+        transition: all 0.3s ease;
+      }
+      .verse-section:hover {
+        box-shadow: 0 12px 40px rgba(26, 26, 46, 0.12);
+        transform: translateY(-2px);
       }
       .verse-reference {
-        font-weight: bold;
-        color: #6750a4;
+        font-weight: 600;
+        color: var(--accent-gold);
+        font-family: 'Cinzel', serif;
       }
       .verse-text {
         padding-top: 10px;
+        color: var(--primary-mid);
       }
 
       .fas {
-        color: white;
+        color: var(--accent-gold);
       }
 
       .dark-mode .btn-secondary {
-        background-color: #6c757d; /* Secondary button in dark mode */
-        border-color: #6c757d;
+        background: var(--primary-gradient);
+        border-color: var(--accent-gold);
       }
 
       .dark-mode {
-        background-color: #121212;
-        color: #e0e0e0;
+        background: linear-gradient(180deg, #0d0d14 0%, #1a1a2e 100%);
+        color: var(--text-gold);
+      }
+
+      .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5 {
+        color: var(--accent-gold) !important;
+      }
+
+      .dark-mode p, .dark-mode span, .dark-mode li, .dark-mode .lead {
+        color: var(--text-gold) !important;
+      }
+
+      .dark-mode .container {
+        color: var(--text-gold);
+      }
+
+      .dark-mode a:not(.btn):not(.navbar-brand):not(.nav-link) {
+        color: var(--accent-gold) !important;
+      }
+
+      .dark-mode strong {
+        color: var(--accent-gold);
       }
 
       .dark-mode body {
-        background-color: #121212; /* Or any color you prefer */
-        color: #e0e0e0; /* Adjust text color as needed */
+        background: linear-gradient(180deg, #0d0d14 0%, #1a1a2e 100%);
+        color: var(--text-gold);
       }
 
-      .dark-mode .btn-secondary {
-        background-color: #555; /* Muted button background for less distraction */
+      .dark-mode .verse-section,
+      .dark-mode .faq-section {
+        background: linear-gradient(180deg, #1e1e2e 0%, #16162a 100%);
+        border-color: rgba(212, 175, 55, 0.2);
       }
-      .dark-mode .btn-secondary {
-        background-color: #6c757d; /* Adjust buttons as well */
+
+      .dark-mode .verse-text {
+        color: var(--text-gold);
       }
 
       .faq-header {
         text-align: center;
         margin-bottom: 40px;
+        font-family: 'Cinzel', serif;
+        color: var(--primary-deep);
       }
+
+      .dark-mode .faq-header,
+      .dark-mode .verses-header {
+        color: var(--accent-gold);
+      }
+
       .faq-section {
-        //background: white;
-        border-radius: 8px;
-        border: 1px solid #ff9800;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        margin-bottom: 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        box-shadow: 0 8px 30px rgba(26, 26, 46, 0.08);
+        padding: 25px;
+        margin-bottom: 25px;
+        background: #fff;
+        transition: all 0.3s ease;
+      }
+      .faq-section:hover {
+        box-shadow: 0 12px 40px rgba(26, 26, 46, 0.12);
+        transform: translateY(-2px);
       }
       .question {
-        font-weight: bold;
+        font-weight: 600;
+        font-family: 'Cinzel', serif;
+        color: var(--primary-deep);
+      }
+      .dark-mode .question {
+        color: var(--accent-gold);
       }
       .answer {
         padding-top: 10px;
+        color: var(--primary-mid);
+      }
+      .dark-mode .answer {
+        color: var(--text-gold);
       }
 
       section {
@@ -204,7 +330,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: whitesmoke;
+        background: linear-gradient(180deg, #f5f0e8 0%, #ebe4d8 100%);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -213,22 +339,35 @@
       }
 
       .loading-screen i {
-        font-size: 3rem; /* Adjust the size of the icon */
-        color: #6750a4; /* Adjust the color of the icon */
+        font-size: 3.5rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .loading-screen p {
-        margin-top: 20px;
-        font-size: 1.5rem;
-        color: #333; /* Adjust the color of the text */
+        margin-top: 15px;
+        font-size: 1.4rem;
+        font-family: 'Cinzel', serif;
+        color: var(--primary-deep);
       }
+
+      .loading-screen p:last-child {
+        font-size: 2rem;
+        color: var(--accent-gold);
+      }
+
       .dark-mode .loading-screen {
-        background-color: #121212; /* Or any color you prefer */
-        color: whitesmoke; /* Adjust text color as needed */
+        background: linear-gradient(180deg, #0d0d14 0%, #1a1a2e 100%);
       }
 
       .dark-mode .loading-screen p {
-        color: whitesmoke; /* Adjust text color as needed */
+        color: var(--text-gold);
+      }
+
+      .dark-mode .loading-screen p:last-child {
+        color: var(--accent-gold);
       }
 
       .spinner {
@@ -274,7 +413,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container-fluid">
         <!-- Add container-fluid for better alignment -->
-        <a class="navbar-brand" href="/">Zadok Calendar</a>
+        <a class="navbar-brand" href="/">Tsadak Calendar</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -305,10 +444,10 @@
     </nav>
   
     <div class="container mt-4">
-      <h1 class="mb-4">Understanding the Zadok Biblical Calendar</h1>
+      <h1 class="mb-4" style="color: var(--primary-deep); letter-spacing: 2px;">Understanding the Tsadak Biblical Calendar</h1>
       <section>
         <p>Click the button below go back to the main calendar page:</p>
-        <a href="/" class="btn btn-primary mr-2 mb-5">Go back to calendar page</a>
+        <a href="/" class="btn btn-primary mr-2 mb-5">📅 Go back to calendar page</a>
       </section>
   
       <section
@@ -324,7 +463,7 @@
         <h2>Introduction</h2>
         
         <p>
-          Welcome to the Zadok Biblical Calendar—a unique approach to timekeeping
+          Welcome to the Tsadak Biblical Calendar—a unique approach to timekeeping
           that integrates scriptural principles, Dead Sea Scrolls data, and
           astronomical observations. This calendar is anchored in a <strong>364‐day
             year</strong> , arranged in <strong>6‐year cycles</strong>  with a <strong>7‐day leap</strong>  afterward,
@@ -341,9 +480,9 @@
           nestled into a 364‐day year that remains in sync with creation.
         </p>
         <p>
-          The Zadok Biblical Calendar relies on Torah, Prophets, New Testament,
+          The Tsadak Biblical Calendar relies on Torah, Prophets, New Testament,
           Enoch, Jubilees, and the Dead Sea Scrolls (notably the accounts of the
-          Sons of Zadok, descendants of Aaron). It aims to recapture a holy
+          Sons of Tsadak, descendants of Aaron). It aims to recapture a holy
           timekeeping system that is both ancient and profoundly relevant today.
         </p>
       </section>
@@ -358,7 +497,7 @@
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         "
       >
-        <h2>The Concept of the Zadok Biblical Calendar</h2>
+        <h2>The Concept of the Tsadak Biblical Calendar</h2>
   
         <h4>364 Days, 6‐Year Blocks, and a Leap Week</h4>
         <p>
@@ -397,7 +536,7 @@
           added after the 6th year ends, ensuring stable alignment with the solar year.
         </p>
         <p>
-          In essence, March 20, 2019, became a modern “reset point” for this Zadok
+          In essence, March 20, 2019, became a modern “reset point” for this Tsadak
           system—coinciding with both scriptural patterns and observable celestial
           markers. By starting from this epoch, the calendar stays in step with the
           vernal equinox while preserving the 6-year sabbatical rhythm and daily
@@ -438,8 +577,8 @@
           </li>
         </ul>
         <p>
-          Through these principles, the Zadok Calendar endeavors to restore a
-          timekeeping system believed to be used by the Sons of Zadok and
+          Through these principles, the Tsadak Calendar endeavors to restore a
+          timekeeping system believed to be used by the Sons of Tsadak and
           reflected in the Dead Sea Scrolls—unifying solar cycles, lunar signs,
           and priestly service into a single, coherent framework.
         </p>
@@ -455,7 +594,7 @@
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         "
       >
-        <h2>How to Use the Zadok Biblical Calendar</h2>
+        <h2>How to Use the Tsadak Biblical Calendar</h2>
         <ol>
           <li>
             <strong>Identify the Year:</strong> When you visit the calendar page,
@@ -491,7 +630,7 @@
           </li>
         </ol>
         <p>
-          Through these steps, the Zadok Biblical Calendar becomes a practical
+          Through these steps, the Tsadak Biblical Calendar becomes a practical
           tool for both everyday scheduling and spiritual reflection. It
           helps you live in sync with a biblical worldview that merges creation’s
           rhythms, scriptural mandates, and the legacy of the Temple priests.
@@ -501,13 +640,13 @@
       <div class="container">
         <div class="faq-header">
           <h2>Frequently Asked Questions</h2>
-          <p>Learn more about the Zadok Biblical Calendar</p>
+          <p>Learn more about the Tsadak Biblical Calendar</p>
         </div>
   
         <div class="faq-section">
           <p class="question">
             Q: How do I find the corresponding Gregorian date for a day on the
-            Zadok Biblical Calendar?
+            Tsadak Biblical Calendar?
           </p>
           <p class="answer">
             A: Each date cell already includes the matching Gregorian date,
@@ -555,17 +694,17 @@
       >
         <h2>Last Words</h2>
         <p>
-          We hope this updated approach clarifies the essence of the Zadok
+          We hope this updated approach clarifies the essence of the Tsadak
           Biblical Calendar. By combining a 6‐year cycle (364 days each year +
           7‐day leap), and a 24‐priest rotation, we believe
-          this system may echo the very timekeeping used by the Sons of Zadok and
+          this system may echo the very timekeeping used by the Sons of Tsadak and
           described in Scripture. May it deepen your connection to the divine
           order and the rhythms of creation.
         </p>
         <p>
           If you have any questions or need further assistance, please don’t
           hesitate to reach out. Blessings as you explore and observe time
-          according to the Zadok Biblical Calendar.
+          according to the Tsadak Biblical Calendar.
         </p>
       </section>
     </div>
@@ -608,19 +747,19 @@
   
         <!-- Section: Text -->
         <section class="mb-4">
-          <p>
-            Thank you for visiting the Zadok Biblical Calendar. Connect with me on
+          <p style="color: var(--text-gold);">
+            Thank you for visiting the Tsadak Biblical Calendar. Connect with me on
             my social media platforms.
           </p>
-          <p>Created with love by Takudzwa Mupanesure</p>
+          <p style="color: var(--accent-gold);">Created with ❤️ by Takudzwa Mupanesure</p>
         </section>
         <!-- Section: Text -->
       </div>
   
       <!-- Section: Copyright -->
-      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-        ©  {{ year_interval }} Zadok Biblical Calendar:
-        <a class="text-light" href="https://biblicalcalendar.site/"
+      <div class="text-center p-3" style="background: linear-gradient(90deg, rgba(0,0,0,0.3), rgba(212, 175, 55, 0.1), rgba(0,0,0,0.3));">
+        © {{ year_interval }} Tsadak Biblical Calendar:
+        <a class="text-light" href="https://biblicalcalendar.site/" style="color: var(--accent-gold) !important;"
           >biblicalcalendar.site</a
         >
       </div>

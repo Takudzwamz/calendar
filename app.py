@@ -9,6 +9,83 @@ import os
 
 
 app = Flask(__name__)
+
+
+# -------------------- MOON PHASE CALCULATION -------------------- #
+
+def get_moon_phase(gregorian_date):
+    """
+    Calculate the moon phase for a given date using ephem.
+    Returns a tuple of (phase_name, phase_emoji, illumination_percent)
+    """
+    if not gregorian_date:
+        return None, None, None
+    
+    try:
+        # Parse the date string (YYYY-MM-DD format)
+        if isinstance(gregorian_date, str):
+            date_obj = datetime.strptime(gregorian_date, '%Y-%m-%d')
+        else:
+            date_obj = gregorian_date
+        
+        # Create ephem date
+        ephem_date = ephem.Date(date_obj)
+        
+        # Get moon illumination
+        moon = ephem.Moon(ephem_date)
+        illumination = moon.phase  # 0-100%
+        
+        # Find the nearest major phases
+        prev_new = ephem.previous_new_moon(ephem_date)
+        next_new = ephem.next_new_moon(ephem_date)
+        prev_full = ephem.previous_full_moon(ephem_date)
+        next_full = ephem.next_full_moon(ephem_date)
+        prev_first_quarter = ephem.previous_first_quarter_moon(ephem_date)
+        next_first_quarter = ephem.next_first_quarter_moon(ephem_date)
+        prev_last_quarter = ephem.previous_last_quarter_moon(ephem_date)
+        next_last_quarter = ephem.next_last_quarter_moon(ephem_date)
+        
+        # Calculate days since new moon (lunar age)
+        lunar_age = ephem_date - prev_new
+        lunar_cycle = next_new - prev_new
+        phase_fraction = lunar_age / lunar_cycle
+        
+        # Determine phase name and emoji based on phase fraction
+        # Lunar cycle: New -> Waxing Crescent -> First Quarter -> Waxing Gibbous -> 
+        #              Full -> Waning Gibbous -> Last Quarter -> Waning Crescent -> New
+        
+        if phase_fraction < 0.0625:
+            phase_name = "New Moon"
+            phase_emoji = "🌑"
+        elif phase_fraction < 0.1875:
+            phase_name = "Waxing Crescent"
+            phase_emoji = "🌒"
+        elif phase_fraction < 0.3125:
+            phase_name = "First Quarter"
+            phase_emoji = "🌓"
+        elif phase_fraction < 0.4375:
+            phase_name = "Waxing Gibbous"
+            phase_emoji = "🌔"
+        elif phase_fraction < 0.5625:
+            phase_name = "Full Moon"
+            phase_emoji = "🌕"
+        elif phase_fraction < 0.6875:
+            phase_name = "Waning Gibbous"
+            phase_emoji = "🌖"
+        elif phase_fraction < 0.8125:
+            phase_name = "Last Quarter"
+            phase_emoji = "🌗"
+        elif phase_fraction < 0.9375:
+            phase_name = "Waning Crescent"
+            phase_emoji = "🌘"
+        else:
+            phase_name = "New Moon"
+            phase_emoji = "🌑"
+        
+        return phase_name, phase_emoji, round(illumination, 1)
+    
+    except Exception as e:
+        return None, None, None
 load_dotenv() 
 
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
@@ -237,6 +314,165 @@ def get_priest_for_date(gregorian_date):
     day_in_block = (cyclePos % 7) + 1
     return PRIESTS_24[priest_index], day_in_block
 
+
+# -------------------- TODAY'S SUMMARY & HOLIDAY COUNTDOWN -------------------- #
+
+def get_todays_summary(gregorian_date, zadok_year_start):
+    """
+    Returns a summary of today including:
+    - Current Tsadak date (month/day)
+    - Priest serving
+    - Moon phase
+    - Is it a Sabbath?
+    - Is it a holiday?
+    - Days until next Sabbath
+    """
+    if isinstance(gregorian_date, str):
+        gregorian_date = datetime.strptime(gregorian_date, '%Y-%m-%d').date()
+    
+    # Ensure zadok_year_start is a date object
+    if hasattr(zadok_year_start, 'date'):
+        zadok_year_start = zadok_year_start.date()
+    
+    # Calculate Tsadak date
+    days_since_start = (gregorian_date - zadok_year_start).days
+    
+    # Calculate which month and day in Tsadak calendar
+    tsadak_month = 1
+    tsadak_day = days_since_start + 1
+    
+    for month in range(1, 13):
+        days_in_month = 31 if month in [3, 6, 9, 12] else 30
+        if tsadak_day <= days_in_month:
+            tsadak_month = month
+            break
+        tsadak_day -= days_in_month
+    
+    # Get priest info - convert date to datetime for get_priest_for_date
+    gregorian_datetime = datetime.combine(gregorian_date, datetime.min.time())
+    priest_name, priest_day = get_priest_for_date(gregorian_datetime)
+    
+    # Get moon phase
+    moon_phase, moon_emoji, moon_illumination = get_moon_phase(gregorian_date.strftime('%Y-%m-%d'))
+    
+    # Check if Sabbath (Saturday)
+    is_sabbath = gregorian_date.weekday() == 5
+    
+    # Check if holiday
+    holiday_name = None
+    for hname, details in holidays.items():
+        if tsadak_month == details["month"] and tsadak_day in details["days"]:
+            holiday_name = hname
+            break
+    
+    # Days until next Sabbath
+    current_weekday = gregorian_date.weekday()
+    if current_weekday == 5:  # Saturday
+        days_until_sabbath = 0
+    elif current_weekday == 6:  # Sunday
+        days_until_sabbath = 6
+    else:
+        days_until_sabbath = 5 - current_weekday
+    
+    return {
+        'tsadak_month': tsadak_month,
+        'tsadak_day': tsadak_day,
+        'priest_name': priest_name,
+        'priest_day': priest_day,
+        'moon_phase': moon_phase,
+        'moon_emoji': moon_emoji,
+        'moon_illumination': moon_illumination,
+        'is_sabbath': is_sabbath,
+        'holiday_name': holiday_name,
+        'days_until_sabbath': days_until_sabbath,
+        'gregorian_date': gregorian_date.strftime('%Y-%m-%d')
+    }
+
+
+def get_next_holiday(gregorian_date, zadok_year_start):
+    """
+    Returns the next upcoming holiday with days remaining.
+    """
+    if isinstance(gregorian_date, str):
+        gregorian_date = datetime.strptime(gregorian_date, '%Y-%m-%d').date()
+    
+    # Ensure zadok_year_start is a date object
+    if hasattr(zadok_year_start, 'date'):
+        zadok_year_start = zadok_year_start.date()
+    
+    # Calculate current Tsadak position
+    days_since_start = (gregorian_date - zadok_year_start).days
+    
+    # Build a list of all holidays with their absolute day position in the year
+    holiday_list = []
+    for hname, details in holidays.items():
+        month = details["month"]
+        for day in details["days"]:
+            # Calculate absolute day position
+            abs_day = 0
+            for m in range(1, month):
+                abs_day += 31 if m in [3, 6, 9, 12] else 30
+            abs_day += day
+            
+            # Get a simpler name for display (first part before /)
+            display_name = hname.split('/')[0].strip() if '/' in hname else hname
+            # Remove "Day X" suffixes for multi-day feasts
+            if "Day " in display_name and display_name.split()[-1].isdigit():
+                display_name = ' '.join(display_name.split()[:-2])
+            
+            holiday_list.append({
+                'name': display_name,
+                'full_name': hname,
+                'month': month,
+                'day': day,
+                'abs_day': abs_day
+            })
+    
+    # Sort by absolute day
+    holiday_list.sort(key=lambda x: x['abs_day'])
+    
+    # Remove duplicates (keep first occurrence of each feast)
+    seen_names = set()
+    unique_holidays = []
+    for h in holiday_list:
+        if h['name'] not in seen_names:
+            seen_names.add(h['name'])
+            unique_holidays.append(h)
+    
+    # Current day in year (1-indexed)
+    current_day_in_year = days_since_start + 1
+    
+    # Find next holiday
+    for holiday in unique_holidays:
+        if holiday['abs_day'] > current_day_in_year:
+            days_until = holiday['abs_day'] - current_day_in_year
+            return {
+                'name': holiday['name'],
+                'full_name': holiday['full_name'],
+                'month': holiday['month'],
+                'day': holiday['day'],
+                'days_until': days_until
+            }
+    
+    # If no holiday found this year, get first holiday of next year
+    # Calculate days remaining in current year
+    total_days_in_year = sum(31 if m in [3, 6, 9, 12] else 30 for m in range(1, 13))
+    days_remaining = total_days_in_year - current_day_in_year
+    
+    if unique_holidays:
+        first_holiday = unique_holidays[0]
+        days_until = days_remaining + first_holiday['abs_day']
+        return {
+            'name': first_holiday['name'],
+            'full_name': first_holiday['full_name'],
+            'month': first_holiday['month'],
+            'day': first_holiday['day'],
+            'days_until': days_until
+        }
+    
+    return None
+
+
 # -------------------- 5) YEAR START CALCULATION -------------------- #
 def divmod_6(delta):
     cycles, remainder = divmod(delta, 6)
@@ -278,7 +514,7 @@ def generate_month_data_with_intervals(start_date, days_in_month, month_number):
     padding_days = (start_date.weekday() + 1) % 7
     month_data += [
         {'simplified_date': '', 'gregorian_date': '', 'weekday': None,
-         'holiday': None, 'description': None}
+         'holiday': None, 'description': None, 'moon_phase': None, 'moon_emoji': None, 'moon_illumination': None}
         for _ in range(padding_days)
     ]
     
@@ -292,6 +528,10 @@ def generate_month_data_with_intervals(start_date, days_in_month, month_number):
         # Now figure out which priest is serving
         priest_name, priest_day = get_priest_for_date(start_date)
         
+        # Get moon phase for this date
+        gregorian_date_str = start_date.strftime('%Y-%m-%d')
+        moon_phase, moon_emoji, moon_illumination = get_moon_phase(gregorian_date_str)
+        
         # Check if it's a holiday
         for hname, details in holidays.items():
             if month_number == details["month"] and day in details["days"]:
@@ -299,7 +539,7 @@ def generate_month_data_with_intervals(start_date, days_in_month, month_number):
                 break
         month_data.append({
             'simplified_date': f"{day:02}",
-            'gregorian_date': start_date.strftime('%Y-%m-%d'),
+            'gregorian_date': gregorian_date_str,
             'weekday': (start_date.weekday() + 1) % 7,
             'holiday': holiday_name,
             'description': holiday_description,
@@ -307,7 +547,11 @@ def generate_month_data_with_intervals(start_date, days_in_month, month_number):
             'is_sabbath': is_sabbath,
              # Store the priest info
             'priest_name': priest_name,
-            'priest_day': priest_day
+            'priest_day': priest_day,
+            # Store moon phase info
+            'moon_phase': moon_phase,
+            'moon_emoji': moon_emoji,
+            'moon_illumination': moon_illumination
         })
         start_date += timedelta(days=1)
     
@@ -320,7 +564,10 @@ def generate_month_data_with_intervals(start_date, days_in_month, month_number):
             'description': None,
             'is_sabbath': False,
             'priest_name': None,
-            'priest_day': None
+            'priest_day': None,
+            'moon_phase': None,
+            'moon_emoji': None,
+            'moon_illumination': None
         })
     return month_data, month_interval
 
@@ -363,6 +610,74 @@ def calculate_year_interval_for_requested_year(requested_year):
 
 # -------------------- 4) FLASK ROUTES -------------------- #
 
+@app.route('/export-calendar')
+def export_calendar():
+    """
+    Generate an .ics file with all holidays for the current Tsadak year.
+    """
+    requested_year = request.args.get('year', default=None, type=int)
+    
+    if requested_year:
+        year_interval = calculate_year_interval_for_requested_year(requested_year)
+    else:
+        year_interval = calculate_current_zadok_year_interval()
+    
+    start_year, end_year = map(int, year_interval.split('-'))
+    
+    # Get the Zadok year start date
+    start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
+    zadok_start = start_dates[start_year]
+    
+    # Build ICS content
+    ics_lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Tsadak Calendar//Biblical Calendar//EN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        f"X-WR-CALNAME:Tsadak Calendar {year_interval}",
+    ]
+    
+    # Add each holiday
+    for holiday_name, details in holidays.items():
+        month = details["month"]
+        for day in details["days"]:
+            # Calculate the Gregorian date for this holiday
+            days_offset = 0
+            for m in range(1, month):
+                days_offset += 31 if m in [3, 6, 9, 12] else 30
+            days_offset += day - 1
+            
+            holiday_date = zadok_start + timedelta(days=days_offset)
+            date_str = holiday_date.strftime('%Y%m%d')
+            
+            # Create unique ID
+            uid = f"{date_str}-{holiday_name.replace(' ', '-').replace('/', '-')}@tsadakcalendar"
+            
+            # Clean description for ICS (escape special chars)
+            description = details["description"].replace('\n', '\\n').replace(',', '\\,').replace(';', '\\;')
+            
+            ics_lines.extend([
+                "BEGIN:VEVENT",
+                f"UID:{uid}",
+                f"DTSTART;VALUE=DATE:{date_str}",
+                f"DTEND;VALUE=DATE:{(holiday_date + timedelta(days=1)).strftime('%Y%m%d')}",
+                f"SUMMARY:{holiday_name}",
+                f"DESCRIPTION:{description[:500]}",  # Limit description length
+                "STATUS:CONFIRMED",
+                "TRANSP:TRANSPARENT",
+                "END:VEVENT",
+            ])
+    
+    ics_lines.append("END:VCALENDAR")
+    ics_content = "\r\n".join(ics_lines)
+    
+    response = make_response(ics_content)
+    response.headers["Content-Type"] = "text/calendar; charset=utf-8"
+    response.headers["Content-Disposition"] = f"attachment; filename=tsadak-calendar-{year_interval}.ics"
+    return response
+
+
 @app.route('/set-date')
 def set_date():
     local_date = request.args.get('date')
@@ -400,6 +715,7 @@ def home():
     start_dates = generate_simplified_calendar_start_dates(start_year, start_year)
     start_date = start_dates[start_year]
     zadok_new_year_str = start_date.strftime('%Y-%m-%d')
+    zadok_year_start = start_date  # Keep as date object for calculations
 
     # Retrieve or set local_date
     local_date = session.get('local_date', today.strftime('%Y-%m-%d'))
@@ -408,6 +724,16 @@ def home():
     if stored_date < today:
         local_date = today.strftime('%Y-%m-%d')
         session['local_date'] = local_date
+
+    # Get today's summary and next holiday countdown using ACTUAL current year
+    # (not the selected/viewed year)
+    current_year_interval = calculate_current_zadok_year_interval()
+    current_start_year = int(current_year_interval.split('-')[0])
+    current_year_start_dates = generate_simplified_calendar_start_dates(current_start_year, current_start_year)
+    current_zadok_year_start = current_year_start_dates[current_start_year]
+    
+    todays_summary = get_todays_summary(today, current_zadok_year_start)
+    next_holiday = get_next_holiday(today, current_zadok_year_start)
 
     months_data, month_intervals = {}, {}
     for month_number in range(1, 13):
@@ -426,7 +752,11 @@ def home():
         year_interval=year_interval,
         local_date=local_date,
         today=today.strftime('%Y-%m-%d'),
-        zadok_new_year=zadok_new_year_str
+        zadok_new_year=zadok_new_year_str,
+        todays_summary=todays_summary,
+        next_holiday=next_holiday,
+        start_year=start_year,
+        end_year=end_year
     )
 
 

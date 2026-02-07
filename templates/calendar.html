@@ -3,32 +3,35 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Zadok Biblical Calendar  {{ year_interval }}</title>
+  <title>Tsadak Biblical Calendar {{ year_interval }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description"
-    content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
-  <meta name="keywords" content="Zadok Calendar, Biblical Calendar, Hebrew Calendar, Festivals, {{ year_interval }}" />
+    content="Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar." />
+  <meta name="keywords" content="Tsadak Calendar, Biblical Calendar, Hebrew Calendar, Festivals, {{ year_interval }}" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://biblicalcalendar.site/" />
-  <meta property="og:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
+  <meta property="og:title" content="Tsadak Biblical Calendar - {{ year_interval }}" />
   <meta property="og:description"
-    content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
+    content="Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar." />
   <meta property="og:image"
     content="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://biblicalcalendar.site/" />
-  <meta property="twitter:title" content="Zadok Biblical Calendar - {{ year_interval }}" />
+  <meta property="twitter:title" content="Tsadak Biblical Calendar - {{ year_interval }}" />
   <meta property="twitter:description"
-    content="Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar." />
+    content="Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar." />
   <meta property="twitter:image"
     content="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png" />
   <link rel="icon" type="image/x-icon"
     href="https://res.cloudinary.com/sputnik-tech-mupa/image/upload/v1707652441/Tradey%20Bay%20Categories%20and%20SubCategories/SubCategories/n8dtzqctd2bckhshdalm.png" />
   <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="canonical" href="https://biblicalcalendar.site/" />
@@ -46,265 +49,907 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Zadok Biblical Calendar",
+      "name": "Tsadak Biblical Calendar",
       "url": "https://biblicalcalendar.site/",
-      "description": "Explore the Zadok Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Zadok calendar."
+      "description": "Explore the Tsadak Biblical Calendar for the year {{ year_interval }}. Learn about important dates and festivals according to the Tsadak calendar."
     }
     </script>
     
 
   <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      --accent-gold: #d4af37;
+      --accent-gold-light: #f4d03f;
+      --accent-copper: #b87333;
+      --primary-deep: #1a1a2e;
+      --primary-mid: #16213e;
+      --primary-light: #0f3460;
+      --text-light: #f8f9fa;
+      --text-gold: #e8d5b7;
+      --sabbath-green: #2d5016;
+      --sabbath-light: #4a7c23;
+      --holiday-amber: #ff8c00;
+      --today-glow: rgba(212, 175, 55, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #f8f9fa;
+      background: linear-gradient(180deg, #f5f0e8 0%, #ebe4d8 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4, h5, .navbar-brand, .calendar-header {
+      font-family: 'Cinzel', serif;
     }
 
     ::-webkit-scrollbar {
-      width: 12px;
+      width: 10px;
     }
 
     ::-webkit-scrollbar-track {
-      background-color: #6750a4;
-      -webkit-border-radius: 10px;
+      background: var(--primary-deep);
       border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
-      -webkit-border-radius: 10px;
       border-radius: 10px;
-      background: #ff9800;
+      background: linear-gradient(180deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
     }
 
     .calendar-card {
       overflow: hidden;
-      border-radius: 15px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(26, 26, 46, 0.15), 0 8px 25px rgba(26, 26, 46, 0.1);
+      background: #fff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .calendar-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 25px 70px rgba(26, 26, 46, 0.18), 0 10px 30px rgba(26, 26, 46, 0.12);
+    }
+
+    .bottom-nav {
+      background: #fff;
+      border-radius: 0 0 20px 20px;
     }
 
     .calendar-header {
-      background-color: #6750a4;
-      color: #ffffff;
-      padding: 10px 0;
-      font-size: 1.25rem;
+      background: var(--primary-gradient);
+      color: var(--text-gold);
+      padding: 18px 0;
+      font-size: 1.35rem;
       text-align: center;
-      border-radius: 15px 15px 0 0;
-      border: #6750a4;
+      border-radius: 20px 20px 0 0;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calendar-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
     }
 
     .bg-primary {
-      background-color: #6750a4 !important;
+      background: var(--primary-gradient) !important;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 20px rgba(26, 26, 46, 0.2);
+      padding: 12px 0;
+    }
+
+    .navbar-brand {
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--accent-gold) !important;
+      font-weight: 600;
+    }
+
+    .nav-link {
+      color: var(--text-gold) !important;
+      transition: color 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-gold-light) !important;
     }
 
     .btn-primary {
-      color: #fff;
-      background-color: #6750a4;
-      border-color: #6750a4;
-      border-radius: 15px;
+      color: var(--primary-deep);
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+      border: none;
+      border-radius: 25px;
+      padding: 10px 24px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+      color: var(--primary-deep);
     }
 
     .btn-secondary {
-      color: #fff;
-      background-color: #6750a4;
-      border-color: #6750a4;
-      border-radius: 15px;
+      color: var(--text-light);
+      background: var(--primary-gradient);
+      border: 1px solid var(--accent-gold);
+      border-radius: 25px;
+      padding: 10px 24px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+      color: var(--primary-deep);
+      border-color: var(--accent-gold);
     }
 
     .table {
       width: 100%;
-      margin-bottom: 1rem;
-      color: #212529;
+      margin-bottom: 0;
+      color: #2c2c2c;
+      border-collapse: separate;
+      border-spacing: 3px;
     }
 
     .table th {
-      padding: 0.75rem;
-      font-size: 0.85rem;
+      padding: 12px 8px;
+      font-size: 0.8rem;
       text-align: center;
       vertical-align: middle;
+      background: var(--primary-gradient);
+      color: var(--accent-gold);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: none !important;
+    }
+
+    .table th:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    .table th:last-child {
+      border-radius: 0 8px 8px 0;
     }
 
     .table td {
       position: relative;
-      padding: 0.75rem;
-      font-size: 0.85rem;
+      padding: 12px 6px;
+      font-size: 0.8rem;
       text-align: center;
       vertical-align: middle;
+      background: #fdfcfa;
+      border: 1px solid #e8e4dc !important;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .table td:hover {
+      background: #f8f5f0;
     }
 
     .day-cell .day-number {
-      font-weight: bold;
-      background-color: #6750a4;
-      color: #ffffff;
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      color: var(--text-gold);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      margin-right: 5px;
+      margin-bottom: 4px;
+      box-shadow: 0 3px 10px rgba(26, 26, 46, 0.2);
+      transition: all 0.3s ease;
     }
 
     .fas {
-      color: white;
+      color: var(--accent-gold);
     }
 
     .sabbath .day-number {
-      font-weight: bold;
-      background-color: green;
-      /* Purple background */
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--sabbath-green) 0%, var(--sabbath-light) 100%);
       color: #ffffff;
-      /* White text */
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      margin-right: 5px;
+      margin-bottom: 4px;
+      box-shadow: 0 3px 12px rgba(45, 80, 22, 0.35);
+      animation: sabbath-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes sabbath-glow {
+      0%, 100% { 
+        box-shadow: 0 3px 12px rgba(45, 80, 22, 0.35);
+      }
+      50% { 
+        box-shadow: 0 3px 20px rgba(45, 80, 22, 0.5), 0 0 30px rgba(107, 142, 35, 0.3);
+      }
+    }
+
+    /* Sabbath cell background */
+    td.sabbath {
+      background: linear-gradient(135deg, rgba(45, 80, 22, 0.08) 0%, rgba(107, 142, 35, 0.05) 100%) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    td.sabbath::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(107, 142, 35, 0.1) 0%, transparent 70%);
+      animation: sabbath-peace 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes sabbath-peace {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Holiday celebration styles */
+    td.holiday {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.12) 0%, rgba(255, 140, 0, 0.08) 100%) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    td.holiday::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 8%),
+        radial-gradient(circle at 80% 20%, rgba(255, 180, 0, 0.25) 0%, transparent 6%),
+        radial-gradient(circle at 60% 70%, rgba(255, 215, 0, 0.2) 0%, transparent 7%),
+        radial-gradient(circle at 30% 80%, rgba(255, 200, 50, 0.25) 0%, transparent 5%);
+      animation: sparkle 2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      25% { opacity: 1; }
+      50% { opacity: 0.4; transform: scale(1.02); }
+      75% { opacity: 0.9; }
+    }
+
+    td.holiday .day-number {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+      color: #1a1a2e;
+      animation: holiday-pulse 2s ease-in-out infinite;
+      box-shadow: 0 4px 15px rgba(255, 165, 0, 0.5);
+    }
+
+    @keyframes holiday-pulse {
+      0%, 100% { 
+        box-shadow: 0 4px 15px rgba(255, 165, 0, 0.5);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 4px 25px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 165, 0, 0.4);
+        transform: scale(1.05);
+      }
+    }
+
+    /* Holiday + Sabbath combined (extra special!) */
+    td.holiday.sabbath {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(45, 80, 22, 0.1) 50%, rgba(255, 140, 0, 0.1) 100%) !important;
+    }
+
+    td.holiday.sabbath::before {
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 10%),
+        radial-gradient(circle at 80% 20%, rgba(107, 142, 35, 0.25) 0%, transparent 8%),
+        radial-gradient(circle at 60% 70%, rgba(255, 215, 0, 0.2) 0%, transparent 9%),
+        radial-gradient(circle at 30% 80%, rgba(45, 80, 22, 0.2) 0%, transparent 7%);
+      animation: sparkle-sabbath 2.5s ease-in-out infinite;
+    }
+
+    @keyframes sparkle-sabbath {
+      0%, 100% { opacity: 0.5; }
+      33% { opacity: 1; }
+      66% { opacity: 0.3; }
+    }
+
+    /* Dark mode holiday/sabbath adjustments */
+    .dark-mode td.sabbath {
+      background: linear-gradient(135deg, rgba(45, 80, 22, 0.2) 0%, rgba(107, 142, 35, 0.1) 100%) !important;
+    }
+
+    .dark-mode td.holiday {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 100%) !important;
+    }
+
+    .dark-mode td.holiday .day-number {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+      color: #1a1a2e;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6);
+    }
+
+    .dark-mode td.holiday.sabbath {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.18) 0%, rgba(45, 80, 22, 0.15) 50%, rgba(255, 140, 0, 0.12) 100%) !important;
+    }
+
+    /* Celebration modal styles */
+    .celebration-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .celebration-header h5 {
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+    }
+
+    .sabbath-celebration {
+      background: linear-gradient(135deg, rgba(45, 80, 22, 0.15) 0%, rgba(107, 142, 35, 0.1) 100%);
+      border: 1px solid rgba(45, 80, 22, 0.2);
+    }
+
+    .sabbath-celebration h5 {
+      color: var(--sabbath-green);
+    }
+
+    .holiday-celebration {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 100%);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+    }
+
+    .holiday-celebration h5 {
+      color: #d4820c;
+    }
+
+    .holiday-modal-header {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 100%);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+    }
+
+    .holiday-modal-header h5 {
+      color: #d4820c;
+    }
+
+    .celebration-icon {
+      font-size: 1.5rem;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .celebration-icon.animated {
+      animation: bounce-icon 1s ease-in-out infinite;
+    }
+
+    .celebration-header h5 {
+      animation: none !important;
+      transform: none !important;
+      flex-grow: 0;
+    }
+
+    @keyframes bounce-icon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .scripture-quote {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.03) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border-left: 4px solid var(--accent-gold);
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      line-height: 1.7;
+    }
+
+    .celebration-divider {
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+      margin: 20px 0;
+    }
+
+    .dark-mode .sabbath-celebration h5 {
+      color: var(--sabbath-light);
+    }
+
+    .dark-mode .holiday-celebration h5 {
+      color: var(--accent-gold);
+    }
+
+    .dark-mode .holiday-modal-header h5 {
+      color: var(--accent-gold);
+    }
+
+    .dark-mode .scripture-quote {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(212, 175, 55, 0.08) 100%);
+    }
+
+    /* Today's Summary Card Styles */
+    .summary-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f5f0 100%);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(26, 26, 46, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-gradient);
+    }
+
+    .summary-card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-card-title i {
+      color: var(--accent-gold);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      background: rgba(26, 26, 46, 0.03);
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .summary-item:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .summary-label {
+      font-size: 0.7rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .summary-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+    }
+
+    .summary-value.highlight {
+      color: var(--accent-gold);
+    }
+
+    .summary-value.sabbath {
+      color: var(--sabbath-green);
+    }
+
+    .summary-value.holiday {
+      color: #d4820c;
+    }
+
+    /* Holiday Countdown Card */
+    .countdown-card {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 140, 0, 0.05) 100%);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+    }
+
+    .countdown-card::before {
+      background: linear-gradient(90deg, #FFD700, #FFA500, #FF8C00);
+    }
+
+    .countdown-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .countdown-days {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 80px;
+      padding: 15px;
+      background: var(--primary-gradient);
+      border-radius: 12px;
+      color: var(--text-gold);
+    }
+
+    .countdown-number {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      font-family: 'Cinzel', serif;
+    }
+
+    .countdown-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.9;
+    }
+
+    .countdown-info {
+      flex: 1;
+    }
+
+    .countdown-feast-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin-bottom: 4px;
+    }
+
+    .countdown-date {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .countdown-emoji {
+      font-size: 1.5rem;
+      animation: celebrate 1.5s ease-in-out infinite;
+    }
+
+    /* Dark mode for summary cards */
+    .dark-mode .summary-card {
+      background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .dark-mode .summary-card-title {
+      color: var(--text-gold);
+    }
+
+    .dark-mode .summary-item {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .dark-mode .summary-item:hover {
+      background: rgba(212, 175, 55, 0.15);
+    }
+
+    .dark-mode .summary-label {
+      color: #aaa;
+    }
+
+    .dark-mode .summary-value {
+      color: #fff;
+    }
+
+    .dark-mode .countdown-card {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 140, 0, 0.08) 100%);
+    }
+
+    .dark-mode .countdown-feast-name {
+      color: var(--accent-gold);
+    }
+
+    .dark-mode .countdown-date {
+      color: #aaa;
+    }
+
+    /* Responsive summary section */
+    @media (max-width: 768px) {
+      .summary-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .countdown-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .countdown-days {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .today-highlight .day-number {
-      font-weight: bold;
-      background-color: #ff9800;
-      /* Purple background */
-      color: #000;
-      /* White text */
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+      color: var(--primary-deep);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      margin-right: 5px;
+      margin-bottom: 4px;
+      box-shadow: 0 0 20px var(--today-glow), 0 4px 15px rgba(212, 175, 55, 0.4);
+      animation: pulse-gold 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-gold {
+      0%, 100% { box-shadow: 0 0 20px var(--today-glow), 0 4px 15px rgba(212, 175, 55, 0.4); }
+      50% { box-shadow: 0 0 30px var(--today-glow), 0 4px 20px rgba(212, 175, 55, 0.6); }
     }
 
     .today-highlight {
-      background-color: #b19bd8;
-      color: #000;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(248, 213, 3, 0.1) 100%) !important;
+      border: 2px solid var(--accent-gold) !important;
     }
 
     .holiday-bar {
       position: absolute;
-      bottom: 0;
+      bottom: 4px;
       left: 50%;
-      /* Center the bar relative to its parent */
       transform: translateX(-50%);
-      /* Offset the bar back by half its width to truly center it */
-      width: 50%;
-      /* Adjust the width as needed */
-      height: 5px;
-      border-radius: 5px;
-      background-color: #ff9800;
-      /* Adjust the color as needed */
+      width: 45%;
+      height: 4px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #FFD700, #FFA500, #FF8C00, #FFA500, #FFD700);
+      background-size: 200% 100%;
+      box-shadow: 0 2px 10px rgba(255, 165, 0, 0.5);
+      animation: shimmer-bar 2s linear infinite;
+    }
+
+    @keyframes shimmer-bar {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .sabbath-bar {
       position: absolute;
-      margin-bottom: 0px;
-      margin-top: 5px;
-      bottom: 3px;
+      bottom: 4px;
       left: 50%;
-      /* Center the bar relative to its parent */
       transform: translateX(-50%);
-      /* Offset the bar back by half its width to truly center it */
-      width: 50%;
-      /* Adjust the width as needed */
-      height: 3px;
-      border-radius: 5px;
-      background-color: green;
-      /* Adjust the color as needed */
+      width: 45%;
+      height: 4px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--sabbath-green), var(--sabbath-light), var(--sabbath-green));
+      background-size: 200% 100%;
+      box-shadow: 0 2px 8px rgba(45, 80, 22, 0.4);
+      animation: shimmer-green 3s linear infinite;
+    }
+
+    @keyframes shimmer-green {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Celebration emoji for holidays on date cards */
+    .holiday-card-emoji {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 0.7rem;
+      line-height: 1;
+      background: none;
+      border: none;
+      outline: none;
+      pointer-events: none;
+      animation: celebrate 1s ease-in-out infinite;
+    }
+
+    @keyframes celebrate {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.2) rotate(-10deg); }
+      75% { transform: scale(1.2) rotate(10deg); }
+    }
+
+    /* Make all child elements in clickable cells pass through clicks */
+    .clickable-cell * {
+      pointer-events: none;
+    }
+
+    .clickable-cell {
+      cursor: pointer;
     }
 
     /* Light Mode Styles (default Bootstrap values, or customize as needed) */
     .modal-content {
-      background-color: #fff;
-      /* Light background for light mode */
-      color: #000;
-      /* Text color for light mode */
+      background: linear-gradient(180deg, #fff 0%, #f8f5f0 100%);
+      color: #2c2c2c;
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 25px 80px rgba(26, 26, 46, 0.25);
     }
 
-    .modal-header,
+    .modal-header {
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      background: var(--primary-gradient);
+      color: var(--text-gold);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .modal-header .modal-title {
+      font-family: 'Cinzel', serif;
+    }
+
     .modal-footer {
-      border-color: #dee2e6;
-      /* Light border for modal sections */
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
     }
 
     /* Dark Mode Styles */
     .dark-mode .modal-content {
-      background-color: #343a40;
-      /* Dark background for dark mode */
-      color: #e0e0e0;
-      /* Text color for dark mode */
+      background: linear-gradient(180deg, #1e1e2e 0%, #16162a 100%);
+      color: var(--text-gold);
     }
 
     .dark-mode .modal-header,
     .dark-mode .modal-footer {
-      border-color: #444;
-      /* Dark border for modal sections in dark mode */
+      border-color: rgba(212, 175, 55, 0.2);
     }
 
     .dark-mode .close {
-      color: #e0e0e0;
-      /* Close button color */
+      color: var(--accent-gold);
     }
 
     .dark-mode .btn-secondary {
-      background-color: #6c757d;
-      /* Secondary button in dark mode */
-      border-color: #6c757d;
+      background: var(--primary-gradient);
+      border-color: var(--accent-gold);
     }
 
     .dark-mode {
-      background-color: #121212;
-      color: #e0e0e0;
+      background: linear-gradient(180deg, #0d0d14 0%, #1a1a2e 100%);
+      color: var(--text-gold);
     }
 
     .dark-mode .calendar-card {
-      background-color: #1e1e1e;
-      color: #e0e0e0;
-      border-radius: 15px;
+      background: linear-gradient(180deg, #1e1e2e 0%, #16162a 100%);
+      color: var(--text-gold);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 1px rgba(212, 175, 55, 0.3);
+    }
+
+    .dark-mode .bottom-nav {
+      background: linear-gradient(180deg, #1e1e2e 0%, #16162a 100%);
+      border-radius: 0 0 20px 20px;
     }
 
     .dark-mode .table {
       width: 100%;
-      margin-bottom: 1rem;
-      color: #f5f5f5;
+      margin-bottom: 0;
+      color: var(--text-gold);
       border-radius: 15px;
-      border: 1px solid #6750a4;
     }
 
-    .dark-mode .table th,
+    .dark-mode .table th {
+      background: var(--primary-gradient);
+      color: var(--accent-gold);
+      border: none !important;
+    }
 
     .dark-mode .table td {
-      border-color: #444;
-      /* Adjust based on your design */
+      background: rgba(30, 30, 46, 0.8);
+      border-color: rgba(212, 175, 55, 0.15) !important;
+      color: var(--text-gold);
+    }
+
+    .dark-mode .table td:hover {
+      background: rgba(40, 40, 60, 0.9);
     }
 
     .dark-mode body {
-      background-color: #121212;
-      /* Or any color you prefer */
-      color: #e0e0e0;
-      /* Adjust text color as needed */
+      background: linear-gradient(180deg, #0d0d14 0%, #1a1a2e 100%);
+      color: var(--text-gold);
     }
 
     .dark-mode .calendar-header {
-      background-color: #6750a4;
-      border-radius: 15px 15px 0 0;
-      /* Or any color you prefer */
+      background: var(--primary-gradient);
+      border-radius: 20px 20px 0 0;
     }
 
     .dark-mode .day-cell .day-number {
-      background-color: #6750a4;
-      /* Matching the header */
+      background: var(--primary-gradient);
+      box-shadow: 0 3px 12px rgba(212, 175, 55, 0.2);
     }
 
     .dark-mode .today-highlight {
-      background-color: #9575cd;
-      /* A softer purple for highlighting */
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(184, 115, 51, 0.15) 100%) !important;
+    }
+
+    .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5 {
+      color: var(--accent-gold) !important;
+    }
+
+    .dark-mode .text-muted {
+      color: var(--text-gold) !important;
+    }
+
+    .dark-mode p, .dark-mode span, .dark-mode .lead {
+      color: var(--text-gold);
+    }
+
+    .dark-mode .container {
+      color: var(--text-gold);
+    }
+
+    .dark-mode .support-section {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(26, 26, 46, 0.3) 100%) !important;
+    }
+
+    .dark-mode .support-text,
+    .dark-mode .instructions-text {
+      color: var(--text-gold) !important;
+    }
+
+    .support-text {
+      color: var(--primary-deep);
+    }
+
+    .instructions-text {
+      color: var(--primary-mid);
     }
 
     .dark-mode .holiday-bar {
-      background-color: #ff9800;
-      /* Brighter, to stand out in dark mode */
+      background: linear-gradient(90deg, var(--holiday-amber), var(--accent-gold));
+      box-shadow: 0 2px 10px rgba(255, 140, 0, 0.5);
     }
 
     .dark-mode .btn-secondary {
-      background-color: #6750a4;
-      /* Adjust buttons as well */
+      background: var(--primary-gradient);
+      border-color: var(--accent-gold);
     }
 
     .loading-screen {
@@ -313,7 +958,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: whitesmoke;
+      background: linear-gradient(180deg, #f5f0e8 0%, #ebe4d8 100%);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -322,48 +967,88 @@
     }
 
     .loading-screen i {
-      font-size: 3rem;
-      /* Adjust the size of the icon */
-      color: #6750a4;
-      /* Adjust the color of the icon */
+      font-size: 3.5rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .loading-screen p {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      color: #333;
-      /* Adjust the color of the text */
+      margin-top: 15px;
+      font-size: 1.4rem;
+      font-family: 'Cinzel', serif;
+      color: var(--primary-deep);
+      letter-spacing: 1px;
+    }
+
+    .loading-screen p:last-child {
+      font-size: 2rem;
+      color: var(--accent-gold);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .dark-mode .loading-screen {
-      background-color: #121212;
-      /* Or any color you prefer */
-      color: whitesmoke;
-      /* Adjust text color as needed */
+      background: linear-gradient(180deg, #0d0d14 0%, #1a1a2e 100%);
     }
 
     .dark-mode .loading-screen p {
-      color: whitesmoke;
-      /* Adjust text color as needed */
+      color: var(--text-gold);
+    }
+
+    .dark-mode .loading-screen p:last-child {
+      color: var(--accent-gold);
     }
 
     /* Existing styles */
     .custom-input {
-      border-radius: 30px;
-      background-color: #e0e0e0;
+      border-radius: 25px;
+      background: #fff;
+      border: 2px solid rgba(26, 26, 46, 0.15);
       width: 50%;
+      padding: 10px 20px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .custom-input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+      outline: none;
+    }
+
+    .dark-mode .custom-input {
+      background: rgba(30, 30, 46, 0.8);
+      border-color: rgba(212, 175, 55, 0.3);
+      color: var(--text-gold);
+    }
+
+    .dark-mode .custom-input::placeholder {
+      color: rgba(232, 213, 183, 0.5);
     }
 
     #calendarCarousel {
-      border: 2px solid #6750a4; /* Purple border */
-      border-radius: 15px;
+      border: none;
+      border-radius: 20px;
     }
 
     .custom-button {
-      background-color: #6750a4;
-      color: white;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+      color: var(--primary-deep);
       margin-top: 3px;
-      border-radius: 30px;
+      border-radius: 25px;
+      border: none;
+      padding: 10px 28px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .custom-button:hover {
+      background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+      color: var(--primary-deep);
     }
 
     /* Hide increment and decrement buttons */
@@ -383,17 +1068,44 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      border-left-color: #6750a4;
+      border-left-color: var(--accent-gold);
       animation: spin 1s linear infinite;
     }
 
     /* Adjust color, font-size, etc. to your preference */
   .priest-info {
-    display: block;      /* or block if you want it on its own line */
-    font-size: 0.9rem;         /* slightly smaller than default */
-    color: #6750a4;            /* an example color, or #6750a4 if you prefer */
-    margin-top: 2px;
-   
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary-mid);
+    margin-top: 4px;
+    padding: 2px 6px;
+    background: rgba(26, 26, 46, 0.05);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .dark-mode .priest-info {
+    color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  /* Moon phase styling */
+  .moon-phase {
+    display: inline-block;
+    font-size: 1rem;
+    cursor: help;
+    margin: 2px 0;
+    filter: grayscale(0);
+    transition: transform 0.2s ease;
+  }
+
+  .moon-phase:hover {
+    transform: scale(1.3);
+  }
+
+  .dark-mode .moon-phase {
+    filter: brightness(1.2);
   }
 
     @keyframes spin {
@@ -409,7 +1121,6 @@
     .fade-out {
       animation: fadeOut 0.5s;
       animation-fill-mode: forwards;
-      /* Keeps the element in the state of the last animation frame */
     }
 
     @keyframes fadeOut {
@@ -423,127 +1134,321 @@
       }
     }
 
-    
-
-    @media (max-width: 768px) {
+    /* Responsive Design */
+    @media (max-width: 992px) {
       .calendar-header {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
+        padding: 14px 0;
       }
-
-      .table th,
-      .table td {
-        font-size: 0.75rem;
+      .table th, .table td {
+        padding: 10px 5px;
+        font-size: 0.78rem;
+      }
+      .day-cell .day-number,
+      .sabbath .day-number,
+      .today-highlight .day-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+      .priest-info {
+        font-size: 0.6rem;
+        padding: 2px 4px;
+      }
+      .moon-phase {
+        font-size: 0.85rem;
+      }
+      .custom-input {
+        width: 60%;
       }
     }
 
-    /* Already have up to 576px: tweak it more or add a second query. */
-@media (max-width: 576px) {
-  .table th,
-  .table td {
-    padding: 0.4rem; /* reduce from 0.5rem */
-    font-size: 0.6rem; /* reduce from 0.65rem */
-  }
+    @media (max-width: 768px) {
+      .calendar-header {
+        font-size: 1.05rem;
+        padding: 12px 0;
+      }
+      .table th, .table td {
+        padding: 8px 4px;
+        font-size: 0.72rem;
+      }
+      .day-cell .day-number,
+      .sabbath .day-number,
+      .today-highlight .day-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.65rem;
+      }
+      .priest-info {
+        font-size: 0.55rem;
+      }
+      .moon-phase {
+        font-size: 0.75rem;
+      }
+      .custom-input {
+        width: 65%;
+      }
+      h1 {
+        font-size: 1.5rem !important;
+      }
+      .container {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+    }
 
-  .day-cell .day-number {
-    width: 26px;
-    height: 26px;
-    line-height: 26px;
-    font-size: 0.65rem;
-  }
+    @media (max-width: 576px) {
+      .calendar-header {
+        font-size: 0.95rem;
+        padding: 10px 0;
+      }
+      .table th, .table td {
+        padding: 6px 3px;
+        font-size: 0.65rem;
+      }
+      .day-cell .day-number,
+      .sabbath .day-number,
+      .today-highlight .day-number {
+        width: 26px;
+        height: 26px;
+        font-size: 0.6rem;
+      }
+      .priest-info {
+        font-size: 0.48rem;
+        padding: 1px 3px;
+      }
+      .moon-phase {
+        font-size: 0.65rem;
+      }
+      .custom-input {
+        width: 70%;
+        font-size: 0.9rem;
+        padding: 8px 15px;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+      h1 {
+        font-size: 1.3rem !important;
+      }
+      .container {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      #calendarCarousel {
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+    }
 
-  .priest-info {
-    font-size: 0.5rem; /* or 0.45rem if still overflowing */
-  }
-}
+    @media (max-width: 400px) {
+      .calendar-header {
+        font-size: 0.85rem;
+        padding: 8px 0;
+      }
+      .table th, .table td {
+        padding: 5px 2px;
+        font-size: 0.58rem;
+      }
+      .day-cell .day-number,
+      .sabbath .day-number,
+      .today-highlight .day-number {
+        width: 24px;
+        height: 24px;
+        font-size: 0.55rem;
+      }
+      .priest-info {
+        font-size: 0.42rem;
+      }
+      .moon-phase {
+        font-size: 0.55rem;
+      }
+      .holiday-bar, .sabbath-bar {
+        height: 3px;
+        width: 40%;
+      }
+      h1 {
+        font-size: 1.1rem !important;
+      }
+    }
 
-/* Optional extra step for very narrow screens (320-350px) */
-@media (max-width: 360px) {
-  .table th,
-  .table td {
-    padding: 0.3rem;
-    font-size: 0.55rem;
-  }
+    /* Print Styles */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        font-size: 10pt;
+      }
 
-  .day-cell .day-number {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 0.6rem;
-  }
+      .navbar, .loading-screen, #darkModeToggle, .summary-section,
+      .action-buttons, .toast, .modal, footer, .btn-secondary, .btn-primary,
+      .carousel-control-prev, .carousel-control-next, form {
+        display: none !important;
+      }
 
-  .priest-info {
-    font-size: 0.4rem;
-  }
-}
+      .container {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
 
-/* For medium devices (tablets, ~768-992px wide) */
-@media (max-width: 992px) {
-  .table th, .table td {
-    padding: 0.6rem;      /* Slightly smaller padding */
-    font-size: 0.8rem;    /* Slightly smaller text */
-  }
-  .day-cell .day-number {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    font-size: 0.7rem;    /* smaller circle text */
-  }
-  .priest-info {
-    font-size: 0.6rem;    /* smaller priest name */
-  }
-}
+      h1 {
+        font-size: 18pt !important;
+        color: black !important;
+        margin-bottom: 10px !important;
+      }
 
-/* For small tablets / large phones (~768px wide) */
-@media (max-width: 768px) {
-  .table th, .table td {
-    padding: 0.5rem;
-    font-size: 0.75rem;
-  }
-  .day-cell .day-number {
-    width: 28px;
-    height: 28px;
-    line-height: 28px;
-    font-size: 0.65rem;
-  }
-  .priest-info {
-    font-size: 0.55rem;
-  }
-}
+      .calendar-card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+      }
 
-/* For typical phones (~576px wide) */
-@media (max-width: 576px) {
-  .table th, .table td {
-    padding: 0.4rem;
-    font-size: 0.7rem;
-  }
-  .day-cell .day-number {
-    width: 26px;
-    height: 26px;
-    line-height: 26px;
-    font-size: 0.6rem;
-  }
-  .priest-info {
-    font-size: 0.45rem;
-  }
-}
+      .table {
+        font-size: 8pt !important;
+      }
 
-/* For very narrow screens (~320-400px wide, e.g. iPhone SE) */
-@media (max-width: 400px) {
-  .table th, .table td {
-    padding: 0.3rem;
-    font-size: 0.65rem;
-  }
-  .day-cell .day-number {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 0.55rem;
-  }
-  .priest-info {
-    font-size: 0.4rem;
-  }
-}
+      .table th {
+        background: #f0f0f0 !important;
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
 
+      .table td {
+        background: white !important;
+        border: 1px solid #ccc !important;
+      }
+
+      .day-number {
+        background: #333 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .sabbath .day-number {
+        background: #2d5016 !important;
+      }
+
+      td.holiday .day-number {
+        background: #d4820c !important;
+      }
+
+      .today-highlight {
+        border: 2px solid #d4af37 !important;
+      }
+
+      .moon-phase, .priest-info {
+        font-size: 7pt !important;
+      }
+
+      .holiday-bar {
+        background: #d4820c !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .sabbath-bar {
+        background: #2d5016 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .carousel-item {
+        display: block !important;
+        page-break-after: always;
+        border-radius: 20px;
+      }
+
+      .carousel-item:last-child {
+        page-break-after: auto;
+        border-radius: 20px;
+      }
+
+      /* Hide all carousel items except active for single month print */
+      .print-single-month .carousel-item:not(.active) {
+        display: none !important;
+      }
+    }
+
+    /* Action Buttons Toolbar */
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .action-btn-export {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+    }
+
+    .action-btn-export:hover {
+      background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+      transform: translateY(-2px);
+      color: white;
+      text-decoration: none;
+    }
+
+    .action-btn-print {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+    }
+
+    .action-btn-print:hover {
+      background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+      transform: translateY(-2px);
+    }
+
+    /* Keyboard nav hint */
+    .keyboard-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    .keyboard-hint kbd {
+      background: rgba(0, 0, 0, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    .dark-mode .keyboard-hint kbd {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 576px) {
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .action-btn {
+        width: 80%;
+        justify-content: center;
+      }
+    }
     
   </style>
 </head>
@@ -558,7 +1463,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container-fluid">
       <!-- Add container-fluid for better alignment -->
-      <a class="navbar-brand" href="/">Zadok Calendar</a>
+      <a class="navbar-brand" href="/">Tsadak Calendar</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -583,17 +1488,89 @@
 
   <div class="container mt-5">
     <!-- Updated to use year_interval for displaying the current interval -->
-    <h1 class="text-center mb-4">Zadok Calendar  {{ year_interval }}</h1>
+    <h1 class="text-center mb-4" style="color: var(--primary-deep); letter-spacing: 2px;">Tsadak Calendar {{ year_interval }}</h1>
+    <p class="text-center text-muted mb-4" style="font-family: 'Cinzel', serif;">The Ancient Biblical Calendar</p>
 
     <div class="text-center mb-4">
       <!-- Year search input and button -->
       <form action="/" method="get" class="form-inline justify-content-center">
-        <input type="text" name="year" class="form-control mr-2 custom-input" placeholder="Seach by year" required />
+        <input type="text" name="year" class="form-control mr-2 custom-input" placeholder="Search by year..." required />
         <button type="submit" class="btn custom-button">Search</button>
       </form>
     </div>
 
-    {% set start_year, end_year = year_interval.split('-') %}
+    <!-- Today's Summary & Holiday Countdown -->
+    <div class="summary-section">
+      <!-- Today's Summary Card -->
+      <div class="summary-card">
+        <div class="summary-card-title">
+          <i class="fas fa-sun"></i>
+          Today's Overview
+        </div>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Tsadak Date</span>
+            <span class="summary-value">Month {{ todays_summary.tsadak_month }}, Day {{ todays_summary.tsadak_day }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Moon Phase</span>
+            <span class="summary-value">{{ todays_summary.moon_emoji }} {{ todays_summary.moon_phase }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Priest Serving</span>
+            <span class="summary-value highlight">{{ todays_summary.priest_name or 'Leap Week' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Status</span>
+            {% if todays_summary.holiday_name %}
+              <span class="summary-value holiday">🎉 {{ todays_summary.holiday_name.split('/')[0] }}</span>
+            {% elif todays_summary.is_sabbath %}
+              <span class="summary-value sabbath">🕊️ Shabbat Shalom!</span>
+            {% elif todays_summary.days_until_sabbath == 1 %}
+              <span class="summary-value">Sabbath tomorrow!</span>
+            {% else %}
+              <span class="summary-value">{{ todays_summary.days_until_sabbath }} days to Sabbath</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Holiday Countdown Card -->
+      {% if next_holiday %}
+      <div class="summary-card countdown-card">
+        <div class="summary-card-title">
+          <i class="fas fa-calendar-star"></i>
+          Next Feast
+        </div>
+        <div class="countdown-content">
+          <div class="countdown-days">
+            <span class="countdown-number">{{ next_holiday.days_until }}</span>
+            <span class="countdown-label">{{ 'day' if next_holiday.days_until == 1 else 'days' }}</span>
+          </div>
+          <div class="countdown-info">
+            <div class="countdown-feast-name">{{ next_holiday.name }}</div>
+            <div class="countdown-date">Month {{ next_holiday.month }}, Day {{ next_holiday.day }}</div>
+          </div>
+          <span class="countdown-emoji">🎊</span>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="/export-calendar?year={{ start_year }}" class="action-btn action-btn-export">
+        <i class="fas fa-download"></i> Export to Calendar
+      </a>
+      <button onclick="window.print()" class="action-btn action-btn-print">
+        <i class="fas fa-print"></i> Print Calendar
+      </button>
+    </div>
+
+    <p class="keyboard-hint">
+      <kbd>←</kbd> <kbd>→</kbd> Navigate months &nbsp;|&nbsp; <kbd>Home</kbd> Go to today
+    </p>
+
     {% set current_year = today.split('-')[0]|int %}
     {% if selected_year == current_year %}
     {% set active_month = local_date.split('-')[1]|int %}
@@ -602,7 +1579,7 @@
     {% endif %}
 
     <div id="calendarCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-      <div class="carousel-inner">
+      <div class="carousel-inner" style="border-radius: 20px;">
         {% for month, days in months_data.items() %}
         <div class="carousel-item {% if month|int == active_month %}active{% endif %}">
           <div class="calendar-card">
@@ -655,8 +1632,14 @@
                       onclick="showInfo('{{ day.holiday }}', '{{ day.description }}', '{{ day.is_sabbath|lower }}')"
                     {% endif %}>
                   {% if day.simplified_date %}
+                    {% if day.holiday %}
+                      <span class="holiday-card-emoji">🎉</span>
+                    {% endif %}
                     <span class="day-number">{{ day.simplified_date }}</span><br />
                     {{ day.gregorian_date }}<br>
+                    {% if day.moon_emoji %}
+                      <span class="moon-phase" title="{{ day.moon_phase }} ({{ day.moon_illumination }}%)">{{ day.moon_emoji }}</span>
+                    {% endif %}
                     {% if day.priest_name %}
                       <span class="priest-info">
                         {{ day.priest_name }}
@@ -666,7 +1649,7 @@
                     {% if day.holiday %}
                       <div class="holiday-bar"></div>
                     {% endif %}
-                    {% if day.is_sabbath %}
+                    {% if day.is_sabbath and not day.holiday %}
                       <div class="sabbath-bar"></div>
                     {% endif %}
                   {% endif %}
@@ -679,7 +1662,7 @@
               </tbody>
             </table>
             <!-- Bottom Year Navigation -->
-            <div class="d-flex justify-content-between align-items-center p-2">
+            <div class="d-flex justify-content-between align-items-center p-2 bottom-nav">
               <a href="/?year={{ start_year | int - 1 }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Prev yr
               </a>
@@ -711,9 +1694,9 @@
 
 
     <!-- Buy Me a Coffee Section -->
-    <div class="text-center mb-4 py-5">
-      <p class="lead">
-        Are you enjoying the Zadok Biblical Calendar? Consider supporting me!
+    <div class="text-center mb-4 py-5 support-section" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.03) 0%, rgba(212, 175, 55, 0.05) 100%); border-radius: 20px; margin-top: 2rem;">
+      <p class="lead support-text" style="font-family: 'Cinzel', serif;">
+        Are you enjoying the Tsadak Biblical Calendar? Consider supporting me!
       </p>
       <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
         data-name="bmc-button" data-slug="takudzwamupanesure" data-color="#ff9800" data-emoji="" data-font="Cookie"
@@ -721,11 +1704,11 @@
         data-coffee-color="#ffffff"></script>
     </div>
     <!-- Generate Calendar instructions link -->
-    <div class="text-center mb-4">
-      <p>
-        Click the button below to learn how to use the Zadok Biblical Calendar
+    <div class="text-center mb-4 instructions-section" style="padding: 2rem 0;">
+      <p class="instructions-text">
+        Click the button below to learn how to use the Tsadak Biblical Calendar
       </p>
-      <a href="/instructions" class="btn btn-primary mr-2">Calendar Usage instructions</a>
+      <a href="/instructions" class="btn btn-primary mr-2">📖 Calendar Usage Instructions</a>
     </div>
 
   </div>
@@ -756,19 +1739,19 @@
 
       <!-- Section: Text -->
       <section class="mb-4">
-        <p>
-            Thank you for visiting the Zadok Biblical Calendar. Connect with me
+        <p style="color: var(--text-gold);">
+            Thank you for visiting the Tsadak Biblical Calendar. Connect with me
             on my social media platforms.
         </p>
-        <p>Created with love by Takudzwa Mupanesure</p>
+        <p style="color: var(--accent-gold);">Created with ❤️ by Takudzwa Mupanesure</p>
       </section>
       <!-- Section: Text -->
     </div>
 
     <!-- Section: Copyright -->
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-      ©  {{ year_interval }} Zadok Biblical Calendar:
-      <a class="text-light" href="https://biblicalcalendar.site/">biblicalcalendar.site</a>
+    <div class="text-center p-3" style="background: linear-gradient(90deg, rgba(0,0,0,0.3), rgba(212, 175, 55, 0.1), rgba(0,0,0,0.3));">
+      © {{ year_interval }} Tsadak Biblical Calendar:
+      <a class="text-light" href="https://biblicalcalendar.site/" style="color: var(--accent-gold) !important;">biblicalcalendar.site</a>
     </div>
   </footer>
 
@@ -809,16 +1792,19 @@
   aria-atomic="true"
   style="
     position: fixed;
-    background-color: #6750a4;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 9999;
-    min-width: 300px; /* make it a bit wider */
+    min-width: 320px;
+    border-radius: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   "
 >
-  <div class="toast-header" style="font-size: 1.2rem;">
-    <strong class="mr-auto">Zadok Calendar</strong>
+  <div class="toast-header" style="font-size: 1.2rem; background: var(--primary-gradient); color: var(--accent-gold); border-radius: 10px 10px 0 0;">
+    <strong class="mr-auto">Tsadak Calendar</strong>
     <small>Now</small>
     <button
       type="button"
@@ -831,10 +1817,10 @@
   </div>
   <div
     class="toast-body"
-    style="font-size: 1.4rem; text-align: center; padding: 1.5rem;"
+    style="font-size: 1.3rem; text-align: center; padding: 1.5rem; color: #e8d5b7; font-family: 'Cinzel', serif;"
   >
-    Happy Biblical New Year!
-    All Praise and Honor to 𐤉𐤄𐤅𐤄
+    🎉 Happy Biblical New Year! 🎉<br>
+    <span style="font-size: 1.1rem;">All Praise and Honor to 𐤉𐤄𐤅𐤄</span>
   </div>
 </div>
 
@@ -869,7 +1855,7 @@
     function runConfetti() {
       const duration = 5 * 1000;
       const end = Date.now() + duration;
-      const colors = ['#6750a4', '#ff9800', '#f44336', '#4caf50'];
+      const colors = ['#d4af37', '#1a1a2e', '#b87333', '#f4d03f', '#2d5016'];
     
       (function frame() {
         confetti({
@@ -898,19 +1884,31 @@
     function showInfo(holidayName, holidayDescription, isSabbath) {
       let contentHTML = "";
     
-      // If it's a sabbath, add sabbath info.
+      // If it's a sabbath, add sabbath info with celebration.
       if (isSabbath === true || isSabbath === "true") {
         contentHTML +=
-            "<h5>Shabbat Shalom/Happy Sabbath</h5><p>A day of rest and spiritual enrichment. Exodus 20:8-11 KJV:  Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: but the seventh day is the sabbath of 𐤉𐤄𐤅𐤄 thy Elohim: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days 𐤉𐤄𐤅𐤄 made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore 𐤉𐤄𐤅𐤄 blessed the sabbath day, and hallowed it.</p>";
+            "<div class='celebration-header sabbath-celebration'>" +
+            "<span class='celebration-icon animated'>🕊️</span>" +
+            "<h5>Shabbat Shalom / Happy Sabbath</h5>" +
+            "<span class='celebration-icon animated'>✨</span>" +
+            "</div>" +
+            "<p>A day of rest and spiritual enrichment.</p>" +
+            "<blockquote class='scripture-quote'>Exodus 20:8-11 KJV: Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: but the seventh day is the sabbath of 𐤉𐤄𐤅𐤄 thy Elohim: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days 𐤉𐤄𐤅𐤄 made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore 𐤉𐤄𐤅𐤄 blessed the sabbath day, and hallowed it.</blockquote>";
       }
     
       // If a holiday exists, append holiday info.
       if (holidayName && holidayName !== "None") {
         // If sabbath info was already added, add a separator.
         if (contentHTML) {
-          contentHTML += "<hr>";
+          contentHTML += "<hr class='celebration-divider'>";
         }
-        contentHTML += `<h5>${holidayName}</h5><p>${holidayDescription}</p>`;
+        contentHTML += 
+            "<div class='celebration-header holiday-modal-header'>" +
+            "<span class='celebration-icon animated'>🎉</span>" +
+            "<h5>" + holidayName + "</h5>" +
+            "<span class='celebration-icon animated'>🎊</span>" +
+            "</div>" +
+            "<blockquote class='scripture-quote'>" + holidayDescription + "</blockquote>";
       }
     
       // If there's nothing to display, don't show the modal.
@@ -1005,6 +2003,135 @@
     }
   
     document.addEventListener('DOMContentLoaded', scheduleReloadAtSixAM);
+  </script>
+
+  <!-- Keyboard Navigation JavaScript -->
+  <script>
+    function jumpToMonth(index) {
+      const carousel = $('#calendarCarousel');
+      carousel.carousel(index);
+    }
+    
+    function goToToday() {
+      // Find the month with today's date and jump to it
+      const todayElements = document.querySelectorAll('.today-highlight');
+      if (todayElements.length > 0) {
+        const todayCell = todayElements[0];
+        const carouselItem = todayCell.closest('.carousel-item');
+        if (carouselItem) {
+          const allItems = document.querySelectorAll('.carousel-item');
+          const index = Array.from(allItems).indexOf(carouselItem);
+          if (index !== -1) {
+            jumpToMonth(index);
+            // Flash the today cell
+            setTimeout(() => {
+              todayCell.style.transition = 'all 0.3s ease';
+              todayCell.style.boxShadow = '0 0 30px var(--accent-gold), 0 0 60px var(--accent-gold)';
+              setTimeout(() => {
+                todayCell.style.boxShadow = '';
+              }, 2000);
+            }, 500);
+          }
+        }
+      }
+    }
+    
+    // Keyboard Navigation
+    document.addEventListener('keydown', function(e) {
+      // Don't trigger if user is typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+      
+      const carousel = $('#calendarCarousel');
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          carousel.carousel('prev');
+          showKeyboardHint('← Previous Month');
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          carousel.carousel('next');
+          showKeyboardHint('→ Next Month');
+          break;
+        case 'Home':
+          e.preventDefault();
+          goToToday();
+          showKeyboardHint('🏠 Jump to Today');
+          break;
+        case 'p':
+        case 'P':
+          if (!e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            window.print();
+          }
+          break;
+        case 'e':
+        case 'E':
+          if (!e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            window.location.href = '/export-calendar';
+          }
+          break;
+      }
+    });
+    
+    // Visual feedback for keyboard actions
+    function showKeyboardHint(message) {
+      // Remove any existing hint
+      const existingHint = document.querySelector('.keyboard-action-hint');
+      if (existingHint) {
+        existingHint.remove();
+      }
+      
+      // Create and show new hint
+      const hint = document.createElement('div');
+      hint.className = 'keyboard-action-hint';
+      hint.innerHTML = message;
+      hint.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--primary-gradient);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        z-index: 9999;
+        animation: fadeInOut 1.5s ease forwards;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      `;
+      document.body.appendChild(hint);
+      
+      setTimeout(() => {
+        hint.remove();
+      }, 1500);
+    }
+    
+    // Add fadeInOut animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Print function
+    function printCalendar() {
+      window.print();
+    }
+    
+    // Export function
+    function exportCalendar() {
+      window.location.href = '/export-calendar';
+    }
   </script>
   
 </body>
