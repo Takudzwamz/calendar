@@ -1,0 +1,21 @@
+# ============================================================================
+# Biblical Calendar (Zadok solar calendar) — Flask app, no database.
+# Deployed on the Oracle ARM64 VM behind Caddy (biblicalcalendar.site).
+# Container listens on :8080 on the `web` network; Caddy reverse-proxies it.
+# Build natively on the VM:  docker compose -f docker-compose.app.yml up -d --build
+# ============================================================================
+services:
+  calendar-app:
+    image: calendar-app:latest
+    container_name: calendar-app
+    restart: unless-stopped
+    env_file:
+      - .env.app
+    networks:
+      - web
+    expose:
+      - "8080"
+
+networks:
+  web:
+    external: true
